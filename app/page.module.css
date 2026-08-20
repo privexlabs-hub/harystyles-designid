@@ -1,0 +1,86 @@
+.page {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--s-9) var(--s-5) var(--s-11);
+}
+
+.hero {
+  margin-bottom: var(--s-10);
+}
+
+.lamp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--accent);
+  margin-bottom: var(--s-4);
+}
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  box-shadow: var(--shadow-glow);
+}
+
+.title {
+  margin: 0 0 var(--s-5);
+  /* Sized off the viewport so "not posts." holds one line from 360px up. */
+  font-size: clamp(2.75rem, 10vw, 7.5rem);
+  max-width: 14ch;
+}
+
+.lede {
+  max-width: 52ch;
+  color: var(--fg-muted);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-6);
+}
+
+.sectionLabel {
+  margin-bottom: var(--s-4);
+}
+
+/* auto-fit rather than a fixed column count: the same rule serves a phone and a
+   1920 desktop without a breakpoint for each. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: var(--s-4);
+  margin-bottom: var(--s-9);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-5);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+  transition: border-color var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+}
+.card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.cardNum {
+  color: var(--accent);
+}
+
+.cardBlurb {
+  margin: 0;
+}
+
+.editorCard {
+  composes: card;
+  border-color: var(--accent);
+  box-shadow: var(--shadow-glow);
+}

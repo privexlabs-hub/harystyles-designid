@@ -1,0 +1,163 @@
+[
+  {
+    "family": "Fraunces",
+    "weight": 300,
+    "style": "italic",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-300-italic.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-300-italic.woff2"
+  },
+  {
+    "family": "Fraunces",
+    "weight": 400,
+    "style": "italic",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-400-italic.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-400-italic.woff2"
+  },
+  {
+    "family": "Fraunces",
+    "weight": 500,
+    "style": "italic",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-500-italic.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-500-italic.woff2"
+  },
+  {
+    "family": "Fraunces",
+    "weight": 600,
+    "style": "italic",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-600-italic.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-600-italic.woff2"
+  },
+  {
+    "family": "Fraunces",
+    "weight": 300,
+    "style": "normal",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-300.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-300.woff2"
+  },
+  {
+    "family": "Fraunces",
+    "weight": 400,
+    "style": "normal",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-400.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-400.woff2"
+  },
+  {
+    "family": "Fraunces",
+    "weight": 500,
+    "style": "normal",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-500.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-500.woff2"
+  },
+  {
+    "family": "Fraunces",
+    "weight": 600,
+    "style": "normal",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-600.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-600.woff2"
+  },
+  {
+    "family": "Fraunces",
+    "weight": 700,
+    "style": "normal",
+    "ttf": "/assets/fonts/fraunces/fraunces-display-700.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-display-700.woff2"
+  },
+  {
+    "family": "Fraunces Text",
+    "weight": 400,
+    "style": "italic",
+    "ttf": "/assets/fonts/fraunces/fraunces-text-400-italic.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-text-400-italic.woff2"
+  },
+  {
+    "family": "Fraunces Text",
+    "weight": 400,
+    "style": "normal",
+    "ttf": "/assets/fonts/fraunces/fraunces-text-400.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-text-400.woff2"
+  },
+  {
+    "family": "Fraunces Text",
+    "weight": 500,
+    "style": "normal",
+    "ttf": "/assets/fonts/fraunces/fraunces-text-500.ttf",
+    "woff2": "/assets/fonts/fraunces/fraunces-text-500.woff2"
+  },
+  {
+    "family": "Inter Tight",
+    "weight": 300,
+    "style": "normal",
+    "ttf": "/assets/fonts/inter-tight/inter-tight-300.ttf",
+    "woff2": "/assets/fonts/inter-tight/inter-tight-300.woff2"
+  },
+  {
+    "family": "Inter Tight",
+    "weight": 400,
+    "style": "normal",
+    "ttf": "/assets/fonts/inter-tight/inter-tight-400.ttf",
+    "woff2": "/assets/fonts/inter-tight/inter-tight-400.woff2"
+  },
+  {
+    "family": "Inter Tight",
+    "weight": 500,
+    "style": "normal",
+    "ttf": "/assets/fonts/inter-tight/inter-tight-500.ttf",
+    "woff2": "/assets/fonts/inter-tight/inter-tight-500.woff2"
+  },
+  {
+    "family": "Inter Tight",
+    "weight": 600,
+    "style": "normal",
+    "ttf": "/assets/fonts/inter-tight/inter-tight-600.ttf",
+    "woff2": "/assets/fonts/inter-tight/inter-tight-600.woff2"
+  },
+  {
+    "family": "Inter Tight",
+    "weight": 700,
+    "style": "normal",
+    "ttf": "/assets/fonts/inter-tight/inter-tight-700.ttf",
+    "woff2": "/assets/fonts/inter-tight/inter-tight-700.woff2"
+  },
+  {
+    "family": "JetBrains Mono",
+    "weight": 400,
+    "style": "normal",
+    "ttf": "/assets/fonts/jetbrains-mono/jetbrains-mono-400.ttf",
+    "woff2": "/assets/fonts/jetbrains-mono/jetbrains-mono-400.woff2"
+  },
+  {
+    "family": "JetBrains Mono",
+    "weight": 500,
+    "style": "normal",
+    "ttf": "/assets/fonts/jetbrains-mono/jetbrains-mono-500.ttf",
+    "woff2": "/assets/fonts/jetbrains-mono/jetbrains-mono-500.woff2"
+  },
+  {
+    "family": "Noto Symbols",
+    "weight": 400,
+    "style": "normal",
+    "ttf": "/assets/fonts/noto/noto-symbols-400.ttf",
+    "woff2": "/assets/fonts/noto/noto-symbols-400.woff2"
+  },
+  {
+    "family": "Noto Sans",
+    "weight": 400,
+    "style": "normal",
+    "ttf": "/assets/fonts/noto/noto-sans-400.ttf",
+    "woff2": "/assets/fonts/noto/noto-sans-400.woff2"
+  },
+  {
+    "family": "Noto Sans",
+    "weight": 700,
+    "style": "normal",
+    "ttf": "/assets/fonts/noto/noto-sans-700.ttf",
+    "woff2": "/assets/fonts/noto/noto-sans-700.woff2"
+  },
+  {
+    "family": "Noto Emoji",
+    "weight": 400,
+    "style": "normal",
+    "ttf": "/assets/fonts/noto/noto-emoji-400.ttf",
+    "woff2": "/assets/fonts/noto/noto-emoji-400.woff2"
+  }
+]

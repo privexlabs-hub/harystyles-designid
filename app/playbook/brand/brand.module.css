@@ -1,0 +1,97 @@
+.lockup {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+.lockupSm {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.iconRow {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+
+.appIcon {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-lg);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.stamp {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  border: 1.5px solid var(--accent);
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+}
+
+.wordCard {
+  padding: var(--s-5);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+}
+
+.wordList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+/* The icon grid was a fixed 8 columns at 1080px. Auto-fit keeps the cells at a
+   legible size and wraps to 4 or 2 columns on a phone. */
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+  gap: var(--s-4);
+}
+
+.iconCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--fg);
+  text-align: center;
+}
+
+.glyphRow {
+  display: flex;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+
+.glyphCell {
+  flex: 1 1 80px;
+  text-align: center;
+}
+
+.download {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  transition: border-color var(--dur-2) var(--ease-out);
+}
+.download:hover {
+  border-color: var(--accent);
+}

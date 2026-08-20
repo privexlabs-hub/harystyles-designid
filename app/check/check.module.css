@@ -1,0 +1,94 @@
+.page {
+  padding: var(--s-5);
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-4);
+  padding-bottom: var(--s-5);
+  margin-bottom: var(--s-5);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.control select {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: var(--s-1) var(--s-2);
+  font-size: var(--t-sm);
+}
+
+.row {
+  display: flex;
+  gap: var(--s-5);
+  align-items: flex-start;
+  padding: var(--s-5) 0;
+  border-top: 1px solid var(--border-soft);
+  flex-wrap: wrap;
+}
+
+.meta {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.pair {
+  display: flex;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.pending {
+  background: repeating-linear-gradient(45deg, var(--ink-800) 0 8px, var(--ink-900) 8px 16px);
+}
+
+/* The constraint walker's output. Loud when it has errors, quiet otherwise —
+   a guard nobody notices passing is a guard nobody argues with. */
+.constraints {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  margin-bottom: var(--s-5);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-sm);
+  background: var(--bg-raised);
+}
+.constraints[data-has-errors="1"] {
+  border-color: var(--accent);
+}
+
+.findings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-sm);
+}
+.findings li[data-severity="error"] {
+  border-left: 2px solid var(--accent);
+  padding-left: var(--s-3);
+}
+.findings li[data-severity="warn"] {
+  border-left: 2px solid var(--border);
+  padding-left: var(--s-3);
+  color: var(--fg-muted);
+}

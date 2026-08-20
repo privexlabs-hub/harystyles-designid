@@ -1,0 +1,97 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: color-mix(in oklch, var(--bg) 86%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.bar {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--s-3) var(--s-5);
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  flex-shrink: 0;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-left: auto;
+}
+
+.link {
+  font-family: var(--font-ui);
+  font-size: var(--t-sm);
+  color: var(--fg-muted);
+  padding: var(--s-1) 0;
+  border-bottom: 1px solid transparent;
+  white-space: nowrap;
+  transition: color var(--dur-2) var(--ease-out);
+}
+.link:hover {
+  color: var(--fg);
+}
+.link[data-active="true"] {
+  color: var(--fg);
+  font-weight: 500;
+  border-bottom-color: var(--accent);
+}
+
+.editorLink {
+  composes: link;
+  color: var(--accent);
+}
+
+.toggle {
+  display: none;
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  color: var(--fg);
+  padding: var(--s-2) var(--s-3);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+
+/* Below the desktop breakpoint the nav becomes a disclosure panel: ten links
+   will not fit on a phone, and shrinking them to fit makes them untappable. */
+@media (max-width: 900px) {
+  .nav {
+    display: none;
+  }
+  .toggle {
+    display: inline-flex;
+  }
+  .nav[data-open="true"] {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--s-3);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    padding: var(--s-4) var(--s-5) var(--s-5);
+    background: var(--bg-raised);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .nav[data-open="true"] .link {
+    /* Comfortably above the 44px minimum tap target. */
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-size: var(--t-base);
+  }
+}

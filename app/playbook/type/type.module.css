@@ -1,0 +1,133 @@
+/* =========================================================
+   Type specimens.
+
+   The original was a 1080px artboard with a fixed
+   "180px 1fr 200px" specimen row and a three-column family
+   overview. Here the families are an auto-fit Grid, and each
+   specimen row keeps its true type size inside a Rail — a
+   120px hero shrunk to fit a phone would misdescribe the type.
+   ========================================================= */
+
+/* Aa cards in the family overview. */
+.familyGlyph {
+  line-height: 1;
+  color: var(--fg-strong);
+  margin-bottom: 14px;
+  letter-spacing: -0.035em;
+  font-size: 80px;
+}
+
+.familyRole {
+  font-size: 9px;
+  margin-top: 4px;
+  color: var(--accent);
+}
+
+.familyNote {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+/* One row of the scale: metadata, then the specimen, then the family name.
+   Below the specimen breakpoint the three columns stack so the label does not
+   steal width from the sample. */
+.row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+@media (min-width: 900px) {
+  .row {
+    grid-template-columns: 180px minmax(0, 1fr) 200px;
+    gap: 28px;
+    align-items: baseline;
+  }
+}
+
+.rowLabel {
+  font-size: 10px;
+}
+
+.rowMeta {
+  font-size: 10px;
+  margin-top: 4px;
+}
+
+.rowFamily {
+  font-size: 10px;
+  color: var(--fg-faint);
+}
+
+/* The specimen itself. It must not wrap or shrink — it scrolls inside
+   its own rail instead, so 120px stays 120px at any viewport. */
+.specimenRail {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: thin;
+  padding-bottom: var(--s-1);
+}
+
+.specimen {
+  color: var(--fg-strong);
+  width: max-content;
+  max-width: none;
+}
+
+/* Reading and UI samples are prose — those may wrap normally. */
+.specimenWrap {
+  color: var(--fg-strong);
+  width: auto;
+  max-width: 62ch;
+}
+
+.scaleHeading {
+  margin: var(--s-7) 0 var(--s-2);
+}
+.scaleHeading:first-of-type {
+  margin-top: 0;
+}
+
+/* The full-letter specimen card. */
+.letter {
+  padding: var(--s-5);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+  max-width: 72ch;
+}
+
+@media (min-width: 700px) {
+  .letter {
+    padding: 40px;
+  }
+}
+
+.letterMeta {
+  margin-bottom: 22px;
+}
+
+.letterTitle {
+  margin: 0;
+  font-size: clamp(1.75rem, 6vw, 44px);
+  line-height: 1.05;
+}
+
+.letterStanding {
+  margin-top: 18px;
+  margin-bottom: 0;
+  font-size: 19px;
+  color: var(--fg-muted);
+}
+
+.letterBody {
+  margin-top: 28px;
+}
+
+.letterQuote {
+  margin: 28px 0;
+  padding: 0 24px;
+  border-left: 2px solid var(--accent);
+}

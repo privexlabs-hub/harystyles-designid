@@ -1,0 +1,93 @@
+/* =========================================================
+   Device and browser shells, ported from harystyles.html.
+
+   These are portraits of a fixed-size product, so they keep their
+   true pixel dimensions and are scaled as a whole by MockupFrame.
+   Reflowing them would document a layout that does not exist.
+   ========================================================= */
+
+.deviceShell {
+  position: relative;
+  width: 390px;
+  height: 800px;
+  border-radius: 44px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px oklch(0.32 0.018 285);
+  border: 8px solid oklch(0.1 0.022 285);
+  flex-shrink: 0;
+}
+
+.androidShell {
+  composes: deviceShell;
+  width: 380px;
+  border-radius: 28px;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+  border: 6px solid oklch(0.08 0.02 285);
+}
+
+.deviceScreen {
+  position: absolute;
+  inset: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--bg);
+  scrollbar-width: none;
+}
+.deviceScreen::-webkit-scrollbar {
+  display: none;
+}
+
+.browserShell {
+  width: 1280px;
+  height: 820px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.browserChrome {
+  height: 40px;
+  flex-shrink: 0;
+  background: oklch(0.1 0.02 285);
+  border-bottom: 1px solid var(--border-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+}
+
+.dots {
+  display: flex;
+  gap: 7px;
+}
+
+.dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+}
+
+.url {
+  flex: 1;
+  height: 24px;
+  padding: 0 12px;
+  background: oklch(0.18 0.02 285);
+  border-radius: 6px;
+  color: var(--fg-faint);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.browserBody {
+  flex: 1;
+  overflow: auto;
+}

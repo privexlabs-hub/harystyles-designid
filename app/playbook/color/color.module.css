@@ -1,0 +1,97 @@
+/* =========================================================
+   Colour.
+
+   Every ramp in the original was a fixed column count on a
+   1080px artboard — repeat(9,1fr) for amber, repeat(6,1fr)
+   for ink, repeat(3,1fr) for the pairings. Here each is an
+   auto-fit Grid whose min is set from the swatch, so a ramp
+   wraps to two columns on a phone instead of collapsing into
+   stripes too narrow to judge a colour by.
+   ========================================================= */
+
+.swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chip {
+  height: 84px;
+  border-radius: 10px;
+  border: 1px solid var(--border-soft);
+}
+
+/* Mood chips carry no border in the original — the colour is the point. */
+.chipBare {
+  height: 84px;
+  border-radius: 10px;
+}
+
+.swatchToken {
+  font-size: 9px;
+  color: var(--fg);
+}
+
+.swatchRole {
+  font-size: 11px;
+  min-height: 1.45em;
+}
+
+.moodName {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.moodDesc {
+  font-size: 11px;
+}
+
+/* A pairing tile paints its own background, so it cannot inherit the card. */
+.pairing {
+  padding: 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border-soft);
+}
+
+.pairingLabel {
+  font-size: 9px;
+  opacity: 0.6;
+  margin-bottom: 8px;
+  color: inherit;
+}
+
+.pairingSample {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-variation-settings: "opsz" 96, "SOFT" 50;
+}
+
+/* The measured ratio sits under the sample, on the pairing's own background,
+   so it is read in the same conditions it describes. */
+.pairingResult {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-3);
+  align-items: baseline;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid currentColor;
+  border-color: color-mix(in oklch, currentColor 25%, transparent);
+  color: inherit;
+}
+
+.pairingRatio {
+  font-size: 13px;
+  color: inherit;
+  opacity: 0.85;
+}
+
+.pairingVerdict {
+  font-size: 9px;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.sectionSpacer {
+  margin-bottom: var(--s-4);
+}

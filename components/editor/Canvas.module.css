@@ -1,0 +1,50 @@
+.stage {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+.viewport {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  background: var(--ink-1000);
+  background-image:
+    linear-gradient(var(--border-soft) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-soft) 1px, transparent 1px);
+  background-size: 48px 48px;
+  cursor: grab;
+}
+
+.world {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.artboard {
+  position: relative;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.hud {
+  position: absolute;
+  left: var(--s-4);
+  bottom: var(--s-4);
+  display: flex;
+  gap: var(--s-4);
+  padding: var(--s-2) var(--s-4);
+  background: color-mix(in oklch, var(--bg-elevated) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  pointer-events: none;
+}

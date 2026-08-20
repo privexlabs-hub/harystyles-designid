@@ -1,0 +1,11 @@
+Fonts in this directory are redistributed under the SIL Open Font License 1.1.
+
+  Fraunces        https://github.com/undercasetype/Fraunces
+  Inter Tight     https://github.com/rsms/inter
+  JetBrains Mono  https://github.com/JetBrains/JetBrainsMono
+  Noto Sans       https://github.com/notofonts/latin-greek-cyrillic
+  Noto Symbols    https://github.com/notofonts/symbols
+  Noto Emoji      https://github.com/googlefonts/noto-emoji
+
+The OFL permits redistribution and embedding, including within this repository.
+Full text: https://openfontlicense.org/

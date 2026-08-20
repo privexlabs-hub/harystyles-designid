@@ -1,0 +1,212 @@
+.btnStack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.btnRow {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.wrapRow {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-family: var(--font-ui);
+  font-size: 12px;
+}
+
+/* Two columns as in the original artboard, one on a phone. Capped at two so a
+   wide viewport doesn't strand the pair of fields in a quarter of the card. */
+.inputGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+@media (min-width: 560px) {
+  .inputGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.inputFull {
+  grid-column: 1 / -1;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--fg);
+  font-family: var(--font-ui);
+  font-size: 15px;
+}
+
+/* The second field documents the focus ring as a static state. */
+.inputFocus {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--accent) 18%, transparent);
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--fg);
+  font-family: var(--font-body-serif);
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toggle {
+  width: 40px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  padding: 2px;
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  transition: all var(--dur-2);
+}
+
+.toggleKnob {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+}
+
+.card {
+  padding: 20px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-soft);
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 14px 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.menu {
+  width: 240px;
+  max-width: 100%;
+  padding: 6px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--fg);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.menuRule {
+  height: 1px;
+  background: var(--border-soft);
+  margin: 6px;
+}
+
+.toastStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.toast {
+  padding: 14px 18px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 100%;
+}
+
+.modal {
+  max-width: 480px;
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.modalMark {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  margin: 0 auto 20px;
+  background: radial-gradient(circle, var(--amber-500) 0%, var(--amber-700) 70%);
+  display: grid;
+  place-items: center;
+  color: var(--ink-50);
+  box-shadow: var(--shadow-glow);
+}
+
+.avatarRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}

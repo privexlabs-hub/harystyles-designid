@@ -1,0 +1,93 @@
+/* =========================================================
+   Shared chrome for every playbook page.
+
+   The imported pages were 1080px fixed-width artboards. Here the
+   same content is fluid: sections cap at a readable measure, and
+   every specimen grid is auto-fit so it reflows rather than shrinks.
+   ========================================================= */
+
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--s-8) var(--s-5) var(--s-11);
+}
+
+.header {
+  margin-bottom: var(--s-9);
+}
+
+.title {
+  margin: var(--s-2) 0 var(--s-4);
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  line-height: 1.0;
+  max-width: 18ch;
+}
+
+.lede {
+  max-width: 60ch;
+  color: var(--fg-muted);
+  margin: 0;
+}
+
+.section {
+  margin-bottom: var(--s-9);
+}
+
+.sectionTitle {
+  margin: 0 0 var(--s-4);
+}
+
+.sectionNote {
+  max-width: 60ch;
+  margin: 0 0 var(--s-4);
+}
+
+/* The card every specimen sits in. */
+.card {
+  padding: var(--s-5);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+}
+
+.cardLabel {
+  font-size: 9px;
+  margin-bottom: var(--s-3);
+}
+
+/* Auto-fit grids, parameterised by a --min custom property so a caller can say
+   how narrow a tile may get before it wraps. */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--min, 240px)), 1fr));
+  gap: var(--s-4);
+}
+
+/* Content that must keep its true size — type specimens, wide tables. */
+.rail {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding-bottom: var(--s-2);
+}
+
+.footerNav {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding-top: var(--s-6);
+  border-top: 1px solid var(--border-soft);
+}
+
+.footerLink {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  max-width: 24ch;
+}
+.footerLink:last-child {
+  text-align: right;
+  align-items: flex-end;
+}
+.footerLink:only-child {
+  margin-left: auto;
+}

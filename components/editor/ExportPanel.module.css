@@ -1,0 +1,161 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-4);
+}
+
+.formats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  padding: 2px;
+  background: var(--bg-elevated);
+  border-radius: var(--r-sm);
+}
+.formats button {
+  padding: 6px 4px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+.formats button[data-active="true"] {
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 500;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.rowInline {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.label {
+  font-family: var(--font-ui);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.hint {
+  font-size: 11px;
+  color: var(--fg-faint);
+  line-height: 1.4;
+}
+
+.scales {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  background: var(--bg-elevated);
+  border-radius: var(--r-sm);
+}
+.scales button {
+  flex: 1;
+  padding: 6px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+.scales button[data-active="true"] {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.scales button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.warning {
+  margin: 0;
+  padding: var(--s-2) var(--s-3);
+  border-left: 2px solid var(--mood-restless);
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+.primary {
+  padding: var(--s-3);
+  border: 0;
+  border-radius: var(--r-pill);
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  cursor: pointer;
+}
+.primary:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.batch {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--s-2);
+}
+.batch button {
+  padding: var(--s-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+.batch button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.bar {
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width var(--dur-2) var(--ease-out);
+}
+
+.ghost {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.note {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--fg-subtle);
+}

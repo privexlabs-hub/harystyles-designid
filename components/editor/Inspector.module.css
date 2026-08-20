@@ -1,0 +1,132 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--bg-raised);
+  border-left: 1px solid var(--border-soft);
+}
+
+.head {
+  padding: var(--s-4);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.blurb {
+  margin: var(--s-1) 0 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.label {
+  font-family: var(--font-ui);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--fg-muted);
+}
+
+.hint {
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--fg-faint);
+}
+
+.input {
+  width: 100%;
+  padding: var(--s-2) var(--s-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-size: var(--t-sm);
+  resize: vertical;
+}
+.input:focus {
+  /* A border-colour change alone is too quiet to serve as a focus indicator,
+     and `outline: none` removes the only thing a keyboard user can see. */
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* A grid rather than a flex row: the option labels vary in length, and an
+   uneven segmented control reads as broken. */
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  padding: 2px;
+  background: var(--bg-elevated);
+  border-radius: var(--r-sm);
+}
+
+.segmented button {
+  padding: 6px 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: 11px;
+  text-transform: capitalize;
+  cursor: pointer;
+  min-height: 30px;
+  overflow-wrap: anywhere;
+}
+.segmented button[data-active="true"] {
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 500;
+}
+
+.toggle {
+  width: 40px;
+  height: 24px;
+  padding: 2px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  display: flex;
+  justify-content: flex-start;
+  cursor: pointer;
+  transition: all var(--dur-2) var(--ease-out);
+}
+.toggle[data-on="true"] {
+  background: var(--accent);
+  justify-content: flex-end;
+}
+.toggle i {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: var(--fg-muted);
+}
+.toggle[data-on="true"] i {
+  background: var(--ink-1000);
+}
+
+.ghost {
+  align-self: flex-start;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: var(--t-xs);
+  cursor: pointer;
+}
+.ghost:hover {
+  color: var(--fg);
+  border-color: var(--border-strong);
+}

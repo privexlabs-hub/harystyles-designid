@@ -1,0 +1,11 @@
+/*
+ * The landing page is one tall artboard. The design canvas drew it at 1280×2400
+ * and let the last screenful scroll inside the window; here the shell grows to
+ * the page's full 2,909px instead, so the pricing cards and the footer are
+ * actually visible in the mockup. The shell's own height is a fixed 820 in
+ * Frames.module.css, so the artboard relaxes it here rather than the shared
+ * frame growing a prop only this page would ever pass.
+ */
+.tall > * {
+  height: auto;
+}
