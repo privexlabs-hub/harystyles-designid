@@ -121,7 +121,7 @@ export default function TypePage() {
   return (
     <PlaybookPage
       href="/playbook/type"
-      eyebrow="02 · TYPE"
+      eyebrow="03 · TYPE"
       title={
         <>
           Three families, one{" "}

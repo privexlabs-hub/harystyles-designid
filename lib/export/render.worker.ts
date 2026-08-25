@@ -33,6 +33,14 @@ export type ExportRequest = {
   sizeId?: string;
   variant?: Partial<Variant>;
   values?: FieldValues;
+  /**
+   * Photographs, keyed by the field that holds them.
+   *
+   * Bytes rather than data URIs: a transferable buffer costs a pointer across
+   * `postMessage` where base64 would cost a copy of the whole photograph, and
+   * this thread has to base64 it once for Satori anyway.
+   */
+  images?: Record<string, Uint8Array>;
   /** Which slide of a carousel. Ignored by everything else. */
   slide?: number;
 };
@@ -83,10 +91,47 @@ function toSvg(req: ExportRequest): Promise<string> {
       size,
       variant: req.variant,
       values: req.values,
+      images: toDataUris(req.images),
       slide: req.slide ?? 0,
     }),
     { width: size.w, height: size.h },
   );
+}
+
+/**
+ * Bytes to data URIs, for Satori.
+ *
+ * Base64 only ever happens here, on the worker thread, and only once per render
+ * — Satori embeds the result into its SVG output regardless, so this is a cost
+ * the format imposes rather than one we are choosing.
+ *
+ * The type is sniffed from the first bytes because the blob's MIME type does not
+ * survive the trip; getting it wrong would make the browser refuse to decode.
+ */
+function toDataUris(images?: Record<string, Uint8Array>): Record<string, string> | undefined {
+  if (!images) return undefined;
+  const out: Record<string, string> = {};
+
+  for (const [key, bytes] of Object.entries(images)) {
+    const mime =
+      bytes[0] === 0x89 && bytes[1] === 0x50
+        ? "image/png"
+        : bytes[0] === 0xff && bytes[1] === 0xd8
+          ? "image/jpeg"
+          : bytes[0] === 0x52 && bytes[1] === 0x49
+            ? "image/webp"
+            : "image/png";
+
+    // Chunked, because String.fromCharCode(...bytes) blows the argument limit
+    // somewhere around a hundred thousand pixels.
+    let binary = "";
+    for (let i = 0; i < bytes.length; i += 0x8000) {
+      binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+    }
+    out[key] = `data:${mime};base64,${btoa(binary)}`;
+  }
+
+  return out;
 }
 
 /**

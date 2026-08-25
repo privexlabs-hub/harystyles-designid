@@ -1,0 +1,118 @@
+.pillar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-5);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-lg);
+}
+
+.pillarLine {
+  margin: 0;
+}
+
+/* A rewrite: the flat sentence, then the one we would actually publish. */
+.rewrite {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+  padding: var(--s-5);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-lg);
+}
+
+@media (min-width: 720px) {
+  .rewrite {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-5);
+  }
+}
+
+.rewriteHalf {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.struck {
+  color: var(--fg-faint);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.pattern {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  padding: var(--s-4) var(--s-5);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+}
+
+.patternShape {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.example {
+  margin: 0;
+}
+
+.microcopy {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--t-sm);
+}
+
+.microcopy th {
+  text-align: left;
+  padding: var(--s-2) var(--s-3);
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-ui);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--fg-subtle);
+  white-space: nowrap;
+}
+
+.microcopy td {
+  padding: var(--s-3);
+  border-bottom: 1px solid var(--border-soft);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.microcopy td:first-child {
+  color: var(--fg-faint);
+  white-space: nowrap;
+}
+
+.cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.ctaChip {
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  font-family: var(--font-ui);
+  font-size: var(--t-sm);
+  color: var(--fg);
+}
+
+.ctaChipBad {
+  composes: ctaChip;
+  color: var(--fg-faint);
+  text-decoration: line-through;
+  border-style: dashed;
+}

@@ -80,11 +80,37 @@ const PAIRINGS: Array<{
   { bg: "var(--bg-elevated)", fg: "var(--fg-muted)", bgToken: "ink-800", fgToken: "ink-300", label: "Tertiary chip", sample: "7 MIN · MAR 14" },
 ];
 
+const STATUS: Array<{
+  token: string;
+  source: string;
+  fgToken: TokenName;
+  use: string;
+}> = [
+  { token: "--ok", source: "--mood-still", fgToken: "mood-still", use: "Kept, saved, done. The sage the mood picker already uses for quiet." },
+  { token: "--caution", source: "--mood-restless", fgToken: "mood-restless", use: "Not yet, needs attention. The amber that won't sit still." },
+  { token: "--alarm", source: "--mood-burning", fgToken: "mood-burning", use: "Something is wrong. Rust, not fire-engine red." },
+  { token: "--note", source: "--mood-melancholy", fgToken: "mood-melancholy", use: "For your information. The low-lit blue." },
+];
+
+const THEMES: Array<[string, string | undefined, string]> = [
+  ["Ink", undefined, "default — dim night"],
+  ["Dusk", "dusk", "warmer, six tokens"],
+  ["Paper", "paper", "light — full override"],
+];
+
+const THEME_ROLES: Array<[string, string]> = [
+  ["--bg", "page"],
+  ["--bg-card", "card"],
+  ["--bg-elevated", "elevated"],
+  ["--border", "border"],
+  ["--accent", "accent"],
+];
+
 export default function ColorPage() {
   return (
     <PlaybookPage
       href="/playbook/color"
-      eyebrow="03 · COLOR"
+      eyebrow="04 · COLOUR"
       title={
         <>
           Ink, lamp, wine, and a{" "}
@@ -204,6 +230,61 @@ export default function ColorPage() {
               </div>
             );
           })}
+        </Grid>
+      </Section>
+
+      <Section
+        title="STATUS · BORROWED, NOT INVENTED"
+        note="These are not new hues. Each one is a mood token doing a second job, because the brand already had a colour for every one of these feelings — and a fresh green and red would be two hues that belonged to nothing else in the system. Ratios are measured against --bg, the surface a status colour is read on."
+      >
+        <Grid min={230}>
+          {STATUS.map((s) => {
+            const c = tokenContrast(s.fgToken, "ink-950");
+            return (
+              <div key={s.token} className={styles.statusTile}>
+                <div className={styles.statusBar} style={{ background: `var(${s.token})` }} />
+                <div className={`mono ${styles.statusToken}`}>{s.token}</div>
+                <div className={`mono ${styles.statusSource}`}>← {s.source}</div>
+                <p className={`body-sm ${styles.statusUse}`}>{s.use}</p>
+                <div className={styles.statusRatio}>
+                  <span className={`mono-num ${styles.pairingRatio}`}>{c.label}</span>
+                  <span className={`mono ${styles.pairingVerdict}`}>
+                    {c.passesNormal ? "✓ AA NORMAL" : "✗ AA NORMAL"} ·{" "}
+                    {c.passesLarge ? "✓ AA LARGE" : "✗ AA LARGE"}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </Grid>
+      </Section>
+
+      <Section
+        title="THE THREE THEMES, SIDE BY SIDE"
+        note="Every other swatch on this page renders in whichever theme is active, so two of the three are invisible. Each column below sets data-theme on itself and lets the cascade resolve the roles inside it. Note that the dusk override is deliberately partial: it restates six surface tokens only, and inherits foreground and accent from ink — which is why dusk reads as ink with the lamp turned up rather than as a palette of its own."
+      >
+        <Grid min={230}>
+          {THEMES.map(([name, theme, desc]) => (
+            <div key={name} className={styles.themeCol} data-theme={theme}>
+              <div className={`mono ${styles.themeName}`}>
+                {name} · {desc}
+              </div>
+              <div className={styles.themeRoles}>
+                {THEME_ROLES.map(([token, role]) => (
+                  <div key={token} className={styles.themeRole}>
+                    <div className={styles.themeRoleChip} style={{ background: `var(${token})` }} />
+                    <span className={`mono ${styles.themeRoleName}`}>{role}</span>
+                  </div>
+                ))}
+              </div>
+              <div className={styles.themeSpecimen}>
+                <div className={styles.themeSpecimenStrong}>The lamp is lit</div>
+                <p className={`body-sm ${styles.themeSpecimenBody}`}>
+                  I packed the kettle last.
+                </p>
+              </div>
+            </div>
+          ))}
         </Grid>
       </Section>
     </PlaybookPage>

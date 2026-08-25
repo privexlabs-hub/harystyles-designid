@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useEditor } from "@/lib/store/editor";
+import { selectPage, useEditor } from "@/lib/store/editor";
 import { Canvas } from "./Canvas";
+import { CanvasErrorBoundary } from "./ErrorBoundary";
+import { PagesRail } from "./PagesRail";
+import { SaveControls } from "./SaveControls";
 import { Inspector } from "./Inspector";
 import { Library } from "./Library";
 import styles from "./EditorShell.module.css";
@@ -21,8 +24,14 @@ export function EditorShell() {
   const undo = useEditor((s) => s.undo);
   const redo = useEditor((s) => s.redo);
   const requestFit = useEditor((s) => s.requestFit);
+  const templateId = useEditor((s) => selectPage(s)?.templateId ?? "");
+  const addPage = useEditor((s) => s.addPage);
+  const pageCount = useEditor((s) => s.project.pages.length);
   const canUndo = useEditor((s) => s.past.length > 0);
   const canRedo = useEditor((s) => s.future.length > 0);
+  // Patch.label has been recorded since the beginning and shown nowhere.
+  const undoLabel = useEditor((s) => s.past[s.past.length - 1]?.label);
+  const redoLabel = useEditor((s) => s.future[0]?.label);
 
   // Zustand's persist rehydrates after mount, so the first paint would show the
   // default template and then swap. Holding the panes back one frame avoids it.
@@ -59,9 +68,19 @@ export function EditorShell() {
 
   return (
     <div className={styles.shell}>
+      {/*
+        The library is one button per template, so without these the export
+        controls sit 219 tab stops from the top — technically reachable and
+        practically not. Hidden until focused, in the same manner as the
+        site-wide skip link.
+      */}
+      <nav className={styles.skips} aria-label="Skip within the editor">
+        <a href="#editor-canvas">Skip to the artboard</a>
+        <a href="#editor-inspector">Skip to editing</a>
+      </nav>
       <div className={styles.library}>{ready && <Library />}</div>
 
-      <div className={styles.centre}>
+      <div className={styles.centre} id="editor-canvas">
         <div className={styles.toolbar}>
           <button
             type="button"
@@ -73,16 +92,36 @@ export function EditorShell() {
           <div className={styles.history}>
             {/* Words rather than ↶ ↷: neither arrow is in the brand faces, and
                 the fallback renders them as empty boxes. */}
-            <button type="button" onClick={undo} disabled={!canUndo} title="Undo (⌘Z)">
+            <button
+              type="button"
+              onClick={undo}
+              disabled={!canUndo}
+              title={undoLabel ? `Undo — ${undoLabel} (⌘Z)` : "Nothing to undo"}
+            >
               Undo
             </button>
-            <button type="button" onClick={redo} disabled={!canRedo} title="Redo (⇧⌘Z)">
+            <button
+              type="button"
+              onClick={redo}
+              disabled={!canRedo}
+              title={redoLabel ? `Redo — ${redoLabel} (⇧⌘Z)` : "Nothing to redo"}
+            >
               Redo
             </button>
             <button type="button" onClick={requestFit} title="Fit to screen (F)">
               Fit
             </button>
+            {/* Always here, not only in the pages rail — the rail hides itself
+                for a one-page project, which would leave no way to reach two. */}
+            <button
+              type="button"
+              onClick={() => addPage()}
+              title="Add a page to this project"
+            >
+              Add page
+            </button>
           </div>
+          <SaveControls />
           <button
             type="button"
             className={styles.sheetButton}
@@ -91,10 +130,17 @@ export function EditorShell() {
             Edit
           </button>
         </div>
-        {ready && <Canvas />}
+        {ready && (
+          <CanvasErrorBoundary templateId={templateId} onReset={requestFit}>
+            <Canvas />
+          </CanvasErrorBoundary>
+        )}
+        {ready && <PagesRail />}
       </div>
 
-      <div className={styles.inspector}>{ready && <Inspector />}</div>
+      <div className={styles.inspector} id="editor-inspector" tabIndex={-1}>
+        {ready && <Inspector />}
+      </div>
 
       {sheet && (
         <>

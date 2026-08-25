@@ -17,9 +17,15 @@
     "serve:out": "npx --yes http-server out -p 3010 -s",
     "verify:export": "node scripts/verify-export.mjs",
     "verify:batch": "node scripts/verify-batch.mjs",
+    "verify:brandkit": "node scripts/verify-brandkit.mjs",
     "verify:responsive": "node scripts/responsive-check.mjs",
     "verify:a11y": "node --import ./scripts/lib/register-ts.mjs scripts/verify-a11y.mjs",
-    "verify": "npm run verify:export && npm run verify:batch && npm run verify:responsive && npm run verify:a11y"
+    "verify": "npm run verify:layout && npm run verify:export && npm run verify:batch && npm run verify:pages && npm run verify:shelf && npm run verify:images && npm run verify:documents && npm run verify:brandkit && npm run verify:responsive && npm run verify:a11y",
+    "verify:pages": "node scripts/verify-pages.mjs",
+    "verify:shelf": "node scripts/verify-shelf.mjs",
+    "verify:images": "node scripts/verify-images.mjs",
+    "verify:documents": "node scripts/verify-documents.mjs",
+    "verify:layout": "node scripts/verify-layout.mjs"
   },
   "dependencies": {
     "@resvg/resvg-wasm": "^2.6.2",

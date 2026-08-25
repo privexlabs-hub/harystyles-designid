@@ -70,6 +70,19 @@ select {
   }
 }
 
+/* Used by <Skeleton>. Shallow on purpose — a strong pulse across a grid of a
+   hundred and thirty cards reads as agitation, which is the opposite of the
+   brand. Neutralised by the reduced-motion block above. */
+@keyframes hs-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
 /* The blink used by the Android editor's caret, defined in the host HTML
    in the original and therefore missing from the ported screen. */
 @keyframes blink {

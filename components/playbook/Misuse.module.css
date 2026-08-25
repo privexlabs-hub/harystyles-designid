@@ -1,0 +1,88 @@
+.tile {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
+}
+
+.stage {
+  position: relative;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-6) var(--s-4);
+  background: var(--bg);
+  border: 1px solid var(--alarm);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+/* The low-contrast field is a property of the surface, not the artwork. */
+.stage[data-distortion="busy"] {
+  background:
+    repeating-linear-gradient(
+      38deg,
+      var(--mood-burning) 0 10px,
+      var(--mood-untethered) 10px 20px,
+      var(--amber-600) 20px 30px
+    );
+}
+
+.artwork {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  transform-origin: center;
+}
+
+.artwork[data-distortion="stretch"] {
+  transform: scale(1.55, 0.68);
+}
+
+/* The real-world failure is someone tinting the SVG in an export dialog, so the
+   whole tile is hue-rotated — the same result, arrived at the same way. */
+.artwork[data-distortion="recolour"] {
+  filter: hue-rotate(160deg) saturate(2.2);
+}
+
+.artwork[data-distortion="shadow"] {
+  filter: drop-shadow(0 6px 5px oklch(0 0 0 / 0.85));
+}
+
+.artwork[data-distortion="rotate"] {
+  transform: rotate(-14deg);
+}
+
+.artwork[data-distortion="busy"] {
+  opacity: 0.9;
+}
+
+.flag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--ink-1000);
+  background: var(--alarm);
+  padding: 3px 7px;
+  border-bottom-left-radius: var(--r-sm);
+  text-transform: uppercase;
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.title {
+  font-size: 9px;
+  color: var(--alarm);
+}
+
+.reason {
+  margin: 0;
+}

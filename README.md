@@ -48,6 +48,57 @@ in one terminal and `npm run verify` in another:
 | `npm run verify:batch` | "Export all" produces a zip with every asset, a manifest and a README |
 | `npm run verify:responsive` | No route scrolls sideways at 360–1920, and none logs a console error |
 | `npm run verify:a11y` | The editor is operable from the keyboard with a visible focus ring, and every colour pairing meets WCAG AA |
+| `npm run verify:pages` | Add, duplicate, reorder, undo and delete pages; they survive a reload; a project exports one PDF page per artboard |
+| `npm run verify:shelf` | A project saves, appears on the shelf with a cover, and reopens with its copy intact |
+| `npm run verify:images` | A dropped photograph previews, exports inside the file, and survives a reload |
+| `npm run verify:documents` | A starter opens as a real multi-page project and exports as a correctly sized A4 PDF |
+| `npm run verify:layout` | The editor's three panes sit in the right columns, in the right order, with the artboard centred and drawable, at ten widths |
+
+## Pages, projects and the shelf
+
+A **page** is one artboard: a template, a size, a variant. A **project** is an
+ordered list of pages, and a single artboard is simply a one-page project — so
+the common case pays nothing for the machinery.
+
+Copy is keyed by template, with a page holding an optional override. That keeps
+the property the editor has always had (wander the library, come back, your
+words are still there) while letting two pages of the same template say
+different things. The rule is exact: with one page on a template, edits go to
+the shared draft; the moment a second page of that template appears, both
+materialise their own copy and diverge from there.
+
+Saving takes a snapshot with every page's copy resolved and inlined, so a saved
+project is self-contained rather than entangled with the live drafts.
+
+**Text does not flow between pages.** Each page holds its own copy, the way all
+149 templates do. Satori cannot measure and re-break a paragraph across a page
+boundary, and a DOM-side auto-split would drift from the exported page — the
+precise failure the visual-regression suite exists to catch.
+
+## Documents
+
+Four starters, all in the brand's own vocabulary: a notebook (its word for a
+series of letters), a printed letter, a press kit, and the annual letter — what
+a company with no shareholders writes instead of a report. Print pages are
+authored at 300 dpi, so A4 at 2480×3508 exports as a PDF measuring exactly
+595×842 points.
+
+The generic business documents — proposals with pricing tables, whitepapers with
+executive summaries, CVs — are deliberately absent. They need a vocabulary the
+brand explicitly rejects.
+
+## A note on the layout check
+
+`verify:layout` asserts geometry — position, size, order — rather than presence,
+and it exists because a regression once shipped through a suite that was entirely
+green. A stray element in the shell's grid moved every pane one column right,
+dropped the inspector onto a second row and left the canvas with zero height at
+one whole breakpoint band. Every other check passed: they drive the UI by
+selector, so they proved each control existed while none of them could see that
+the editor was unusable.
+
+A selector test proves a control is there. It says nothing about whether it is
+anywhere a person could reach.
 
 ## How a template works
 
@@ -89,13 +140,13 @@ components/
   frames/               device and browser shells
   screens/              the product, as portraits
   playbook/             documentation primitives
-  editor/               canvas, library, inspector, export
+  editor/               canvas, pages rail, library, inspector, export, save
 lib/
   color.ts              OKLCH maths and the token values
   templates/            sizes, themes, layouts, the catalogue
   satori/               fonts and the render call
   export/               worker, formats, batching, filenames
-  store/                editor state
+  store/                editor state, the shelf, images, IndexedDB
 scripts/                asset generation and the checks
 public/assets/          fonts, logos, favicons, textures — all self-hosted
 ```

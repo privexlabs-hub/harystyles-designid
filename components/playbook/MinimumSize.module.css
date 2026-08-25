@@ -1,0 +1,81 @@
+.figure {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
+}
+
+.stage {
+  min-height: 84px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  background: var(--bg);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  border-left: 3px solid var(--ok);
+  overflow: hidden;
+}
+.figure[data-verdict="below"] .stage {
+  border-left-color: var(--alarm);
+}
+
+.caption {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+}
+
+.measure {
+  font-size: 10px;
+  color: var(--fg);
+}
+
+.verdict {
+  font-size: 9px;
+  color: var(--ok);
+}
+.figure[data-verdict="below"] .verdict {
+  color: var(--alarm);
+}
+
+.note {
+  margin: 0;
+}
+
+.actual {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.rule {
+  height: 1px;
+  width: 60%;
+  background: var(--border-soft);
+  flex-shrink: 0;
+}
+
+/* The same artwork again, magnified. Nothing is redrawn — the detail that
+   survives or closes up is the one the reader just looked at. */
+.zoomed {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.zoomTag {
+  position: absolute;
+  right: 0;
+  bottom: -4px;
+  font-size: 8px;
+  color: var(--fg-faint);
+}

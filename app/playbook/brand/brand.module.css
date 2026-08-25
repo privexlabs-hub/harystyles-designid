@@ -95,3 +95,54 @@
 .download:hover {
   border-color: var(--accent);
 }
+
+/* ---- Lockup matrix -------------------------------------------------- */
+
+.stackedLockup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  text-align: center;
+}
+
+/* Every lockup tile shares one stage height so the matrix reads as a set
+   rather than as eight unrelated cards. */
+.lockupStage {
+  min-height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s-3);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.lockupStageInverted {
+  background: var(--ink-100);
+}
+
+.taglineStack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.tagline {
+  font-size: 11px;
+  color: var(--accent);
+}
+
+/* The wordmark set in the wrong face — Arial, no accent full stop, tracked
+   the way a default text field would track it. */
+.wrongType {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 30px;
+  letter-spacing: 0;
+  line-height: 1;
+  color: var(--fg-strong);
+  white-space: nowrap;
+}

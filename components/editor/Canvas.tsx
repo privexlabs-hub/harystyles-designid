@@ -1,11 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { EmptyState } from "@/components/ui";
+import { collectImageUrls } from "@/lib/store/images";
 import { getTemplate } from "@/lib/templates/registry";
 import { renderTemplate } from "@/lib/templates/render";
 import { SafeAreaGuide } from "@/lib/templates/Artboard";
 import { makeCtx } from "@/lib/templates/context";
-import { currentSize, useCurrentValues, useEditor } from "@/lib/store/editor";
+import { currentSize, selectPage, useCurrentValues, useEditor } from "@/lib/store/editor";
+import { DEFAULT_VARIANT } from "@/lib/templates/types";
 import styles from "./Canvas.module.css";
 
 /**
@@ -17,13 +20,37 @@ import styles from "./Canvas.module.css";
  * the original design canvas used.
  */
 export function Canvas() {
-  const templateId = useEditor((s) => s.templateId);
-  const sizeId = useEditor((s) => s.sizeId);
-  const variant = useEditor((s) => s.variant);
+  const templateId = useEditor((s) => selectPage(s)?.templateId ?? "");
+  const sizeId = useEditor((s) => selectPage(s)?.sizeId ?? null);
+  const variant = useEditor((s) => selectPage(s)?.variant ?? DEFAULT_VARIANT);
   const values = useCurrentValues();
-  const slide = useEditor((s) => s.slide);
+  const slide = useEditor((s) => selectPage(s)?.slide ?? 0);
   const showGuides = useEditor((s) => s.showGuides);
   const fitRequest = useEditor((s) => s.fitRequest);
+
+  // Object URLs, not data URIs: the preview redraws on every keystroke and
+  // base64ing a photograph each time would stall the canvas. The exporter takes
+  // the same bytes as data URIs, which is the one thing Satori can draw.
+  const [images, setImages] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+    let created: string[] = [];
+
+    void collectImageUrls(values).then((urls) => {
+      if (cancelled) {
+        Object.values(urls).forEach(URL.revokeObjectURL);
+        return;
+      }
+      created = Object.values(urls);
+      setImages(urls);
+    });
+
+    return () => {
+      cancelled = true;
+      created.forEach(URL.revokeObjectURL);
+    };
+  }, [values]);
 
   const viewport = useRef<HTMLDivElement>(null);
   const world = useRef<HTMLDivElement>(null);
@@ -48,16 +75,33 @@ export function Canvas() {
   const fit = useCallback(() => {
     const vp = viewport.current;
     if (!vp) return;
-    const pad = 72;
+
+    const width = vp.clientWidth;
+    const height = vp.clientHeight;
+    // Nothing sensible to fit into yet — during a layout pass, or in a pane that
+    // has not been given its size. Leave the transform alone rather than
+    // computing a scale from a collapsed box.
+    if (width <= 0 || height <= 0) return;
+
+    // Proportional, not a flat 72 a side: on a 360px phone that was 144px —
+    // forty per cent of the width — spent before anything was drawn.
+    const pad = Math.min(72, Math.max(16, Math.min(width, height) * 0.06));
+
     const scale = Math.min(
-      (vp.clientWidth - pad * 2) / size.w,
-      (vp.clientHeight - pad * 2) / size.h,
+      (width - pad * 2) / size.w,
+      (height - pad * 2) / size.h,
       1,
     );
+
+    // Clamped like setZoom and zoomAt, which this used to be the only exception
+    // to. An unclamped fit in a narrow pane returned a negative scale, and the
+    // artboard inverted rather than merely shrinking.
+    const clamped = Math.min(4, Math.max(0.02, scale));
+
     tf.current = {
-      scale,
-      x: (vp.clientWidth - size.w * scale) / 2,
-      y: (vp.clientHeight - size.h * scale) / 2,
+      scale: clamped,
+      x: (width - size.w * clamped) / 2,
+      y: (height - size.h * clamped) / 2,
     };
     apply();
   }, [size.w, size.h, apply]);
@@ -149,6 +193,50 @@ export function Canvas() {
     };
   }, [apply, zoomAt]);
 
+  /**
+   * Arrows pan, +/- zoom, 0 and f fit.
+   *
+   * The viewport carries role="application", which tells a screen reader to
+   * hand keystrokes straight to this widget rather than interpreting them. That
+   * is only honest if the widget answers them.
+   */
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const step = e.shiftKey ? 200 : 60;
+    const vp = viewport.current;
+
+    switch (e.key) {
+      case "ArrowLeft":
+        tf.current.x += step;
+        break;
+      case "ArrowRight":
+        tf.current.x -= step;
+        break;
+      case "ArrowUp":
+        tf.current.y += step;
+        break;
+      case "ArrowDown":
+        tf.current.y -= step;
+        break;
+      case "+":
+      case "=":
+      case "-":
+      case "_": {
+        // Zoom about the middle of the viewport, since there is no cursor.
+        const rect = vp?.getBoundingClientRect();
+        if (!rect) return;
+        const inward = e.key === "+" || e.key === "=";
+        zoomAt(rect.left + rect.width / 2, rect.top + rect.height / 2, inward ? 1.2 : 1 / 1.2);
+        e.preventDefault();
+        return;
+      }
+      default:
+        return;
+    }
+
+    e.preventDefault();
+    apply();
+  };
+
   /** Drag to pan, with pointer capture so the drag survives leaving the element. */
   const onPointerDown = (e: React.PointerEvent) => {
     if (e.button !== 0 && e.button !== 1) return;
@@ -175,7 +263,25 @@ export function Canvas() {
   };
 
   if (!template) {
-    return <div className={styles.viewport} ref={viewport} />;
+    // A blank grey pane is indistinguishable from a crash. This happens when a
+    // saved project references a template that has since been renamed or
+    // removed, so it names the id rather than shrugging.
+    return (
+      <div className={styles.stage}>
+        <div className={styles.viewport} ref={viewport}>
+          <div className={styles.missing}>
+            <EmptyState
+              title="This page points at a template that is not here."
+              body={
+                templateId
+                  ? `Nothing in the catalogue is called “${templateId}”. It may have been renamed since this project was saved. Pick another template from the library and this page will take it.`
+                  : "Pick a template from the library to start."
+              }
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
   const ctx = makeCtx({ size, variant, values });
@@ -186,12 +292,14 @@ export function Canvas() {
         ref={viewport}
         className={styles.viewport}
         onPointerDown={onPointerDown}
+        onKeyDown={onKeyDown}
+        tabIndex={0}
         role="application"
-        aria-label="Artboard canvas. Drag to pan, scroll to zoom."
+        aria-label="Artboard canvas. Arrow keys pan, plus and minus zoom, F fits to screen."
       >
         <div ref={world} className={styles.world}>
           <div className={styles.artboard} style={{ width: size.w, height: size.h }}>
-            {renderTemplate({ template, size, variant, values, slide })}
+            {renderTemplate({ template, size, variant, values, images, slide })}
             {/* Guides are drawn on the canvas and never reach an export —
                 renderTemplate does not include them. */}
             {showGuides && size.safe && <SafeAreaGuide ctx={ctx} />}

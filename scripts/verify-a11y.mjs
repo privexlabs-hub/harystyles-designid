@@ -44,20 +44,64 @@ const walk = async (steps) => {
   return seen.filter(Boolean);
 };
 
-// The library is a long list of cards, so the walk has to run past it to
-// reach the inspector and the export controls.
-const focused = await walk(200);
+// The library is one button per template, so reaching the inspector means
+// tabbing past the whole catalogue. The cap is generous on purpose and the
+// number of stops is reported, because "how far is the export panel from the
+// top of the tab order" is itself worth knowing.
+const focused = await walk(400);
 check("editor is reachable by keyboard", focused.length > 10, `${focused.length} stops`);
 check("every focus stop shows a ring", focused.every((f) => f.ring), `${focused.filter((f) => !f.ring).length} without`);
 
 // The library search, the canvas and the inspector must all be on the path.
 const names = focused.map((f) => f.label.toLowerCase()).join(" | ");
 check("search is on the tab path", names.includes("search") || focused.some((f) => f.tag === "input"));
-check("format controls are on the tab path", /png|jpeg|webp|svg|pdf/.test(names));
+const formatsAt = focused.findIndex((f) => /^(png|jpeg|webp|svg|pdf)$/i.test(f.label));
+check(
+  `format controls are on the tab path (stop ${formatsAt + 1} of ${focused.length})`,
+  formatsAt >= 0,
+);
+
+// Reaching them by tabbing the whole catalogue is not good enough; the skip
+// links are what makes the inspector actually reachable. They sit after the
+// site header's own nav, so the test that matters is that they come well
+// before the library grid — not that they are first.
+const skipAt = focused.findIndex((f) => /skip to editing/i.test(f.label));
+check(
+  `a skip link precedes the catalogue (stop ${skipAt + 1}, vs ${formatsAt + 1} to tab there)`,
+  skipAt >= 0 && skipAt < formatsAt / 4,
+);
 
 // Undo/redo without touching a mouse.
 await page.keyboard.press("Meta+z");
 check("undo shortcut does not throw", true);
+
+// The canvas claims role="application", which promises it answers keystrokes.
+const canvas = page.locator('[role="application"]').first();
+await canvas.focus();
+check("the canvas can take focus", await canvas.evaluate((el) => document.activeElement === el));
+
+const transformOf = () =>
+  page.locator('[role="application"] > div').first().evaluate((el) => getComputedStyle(el).transform);
+
+const atRest = await transformOf();
+await page.keyboard.press("ArrowRight");
+await page.waitForTimeout(150);
+check("arrow keys pan the canvas", (await transformOf()) !== atRest);
+
+const panned = await transformOf();
+await page.keyboard.press("+");
+await page.waitForTimeout(150);
+check("plus zooms the canvas", (await transformOf()) !== panned);
+
+// The pages rail is a real group with labelled controls.
+await page.locator('button:text-is("Add page")').first().click();
+await page.waitForTimeout(800);
+check("the pages rail is a labelled group", (await page.locator('[aria-label="Pages in this project"]').count()) > 0);
+check("each page thumbnail is labelled", (await page.locator('[aria-label^="Page "]').count()) >= 2);
+check(
+  "the active page is marked for assistive tech",
+  (await page.locator('[aria-current="true"]').count()) >= 1,
+);
 
 // ---------------------------------------------------------------- contrast
 

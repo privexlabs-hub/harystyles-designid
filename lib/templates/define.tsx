@@ -10,6 +10,10 @@
  */
 import {
   AvatarLayout,
+  GridLayout,
+  PageLayout,
+  PhotoLayout,
+  TimelineLayout,
   BannerLayout,
   ComparisonLayout,
   CtaLayout,
@@ -402,6 +406,126 @@ export const EVENT_KIT: Kit = {
         body: ctx.text("body"),
         footLeft: ctx.text("footLeft"),
         footRight: ctx.text("footRight"),
+      }}
+    />
+  ),
+};
+
+export const TIMELINE_KIT: Kit = {
+  layouts: ["Ruled", "Ledger", "Across", "Milestones"],
+  fields: [
+    EYEBROW,
+    { key: "headline", kind: "text", label: "Headline" },
+    {
+      key: "moments",
+      kind: "list",
+      label: "Moments",
+      hint: "Use :: to separate the date from what happened.",
+      itemLabel: "Moment",
+      max: 6,
+    },
+    ...SIGNOFF,
+  ],
+  render: (ctx) => (
+    <TimelineLayout
+      ctx={ctx}
+      props={{
+        eyebrow: ctx.text("eyebrow"),
+        headline: ctx.text("headline"),
+        moments: ctx.list("moments"),
+        footLeft: ctx.text("footLeft"),
+        footRight: ctx.text("footRight"),
+      }}
+    />
+  ),
+};
+
+export const GRID_KIT: Kit = {
+  layouts: ["Plain", "Numbered", "Carded", "Marked"],
+  fields: [
+    EYEBROW,
+    { key: "headline", kind: "text", label: "Headline" },
+    {
+      key: "cells",
+      kind: "list",
+      label: "Cells",
+      hint: "Use :: to separate a cell's title from its description. Six at most.",
+      itemLabel: "Cell",
+      max: 6,
+    },
+    ...SIGNOFF,
+  ],
+  render: (ctx) => (
+    <GridLayout
+      ctx={ctx}
+      props={{
+        eyebrow: ctx.text("eyebrow"),
+        headline: ctx.text("headline"),
+        cells: ctx.list("cells"),
+        footLeft: ctx.text("footLeft"),
+        footRight: ctx.text("footRight"),
+      }}
+    />
+  ),
+};
+
+export const PHOTO_KIT: Kit = {
+  layouts: ["Full bleed", "Half and half", "Inset", "Portrait"],
+  fields: [
+    EYEBROW,
+    { key: "headline", kind: "text", label: "Headline" },
+    { key: "body", kind: "textarea", label: "Supporting line", rows: 3 },
+    {
+      key: "photo",
+      kind: "image",
+      label: "Photograph",
+      hint: "Drop one in, or choose a brand background. Stored in this browser only.",
+    },
+    { key: "caption", kind: "text", label: "Caption" },
+    ...SIGNOFF,
+  ],
+  render: (ctx) => (
+    <PhotoLayout
+      ctx={ctx}
+      props={{
+        eyebrow: ctx.text("eyebrow"),
+        headline: ctx.text("headline"),
+        body: ctx.text("body"),
+        photo: ctx.image("photo"),
+        caption: ctx.text("caption"),
+        footLeft: ctx.text("footLeft"),
+        footRight: ctx.text("footRight"),
+      }}
+    />
+  ),
+};
+
+export const PAGE_KIT: Kit = {
+  layouts: ["Text", "Opener", "Cover", "Colophon"],
+  fields: [
+    { key: "runningHead", kind: "text", label: "Running head", hint: "Repeated at the top of every page." },
+    { key: "title", kind: "text", label: "Title" },
+    { key: "standfirst", kind: "textarea", label: "Standfirst", rows: 2 },
+    {
+      key: "body",
+      kind: "textarea",
+      label: "Body",
+      hint: "A blank line starts a new paragraph. Text does not flow to the next page — each page holds its own.",
+      rows: 10,
+    },
+    { key: "byline", kind: "text", label: "Byline" },
+    { key: "folio", kind: "text", label: "Page number" },
+  ],
+  render: (ctx) => (
+    <PageLayout
+      ctx={ctx}
+      props={{
+        runningHead: ctx.text("runningHead"),
+        title: ctx.text("title"),
+        standfirst: ctx.text("standfirst"),
+        body: ctx.text("body"),
+        byline: ctx.text("byline"),
+        folio: ctx.text("folio"),
       }}
     />
   ),

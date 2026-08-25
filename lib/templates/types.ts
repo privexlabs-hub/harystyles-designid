@@ -24,6 +24,7 @@ export const CATEGORIES = [
   "ads",
   "email",
   "web",
+  "document",
 ] as const;
 export type CategoryId = (typeof CATEGORIES)[number];
 
@@ -39,6 +40,7 @@ export const CATEGORY_META: Record<CategoryId, { label: string; blurb: string }>
   ads: { label: "Ads", blurb: "Paid placements across three shapes." },
   email: { label: "Email", blurb: "600px-wide blocks for the newsletter." },
   web: { label: "Web", blurb: "Hero art, share cards and page banners." },
+  document: { label: "Documents", blurb: "Print pages at 300 dpi — notebooks, letters, press kits." },
 };
 
 // ---------------------------------------------------------------- variation
@@ -124,6 +126,14 @@ export type Ctx = {
   u: (n: number) => number;
   /** The artboard's content area, inside the margin. */
   inner: { w: number; h: number };
+  /**
+   * A source for an <img>, or "" when the field is empty.
+   *
+   * Deliberately opaque: the DOM preview is handed object URLs and the exporter
+   * data URIs, because each engine can only draw one of those — but the element
+   * tree is identical either way, which is what keeps preview and export honest.
+   */
+  image: (key: string) => string;
   /** Field accessors, typed at the call site and never undefined. */
   text: (key: string) => string;
   num: (key: string) => number;

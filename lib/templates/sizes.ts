@@ -59,6 +59,20 @@ export const SIZES = {
   // Ads.
   adLandscape: size("adLandscape", "Ad landscape · 1200×628", 1200, 628),
 
+  /**
+   * Print pages, at 300 dpi.
+   *
+   * The pixel dimensions are chosen so the existing PDF path — which converts
+   * pixels to millimetres at 300 dpi — produces a correct physical page with no
+   * new arithmetic. A4 at 2480×3508 comes out at exactly 210×297mm.
+   *
+   * They are large, so the capability probe will offer 1× and refuse 3× with a
+   * reason. That is the right answer: a 300 dpi page does not need upscaling.
+   */
+  a4: size("a4", "A4 · 210×297mm", 2480, 3508),
+  letter: size("letter", "US Letter · 8.5×11in", 2550, 3300),
+  book: size("book", "Book page · 6×9in", 1800, 2700),
+
   // Email bodies are a fixed width and a variable height.
   emailHeader: size("emailHeader", "Email header · 600×240", 600, 240),
   emailBlock: size("emailBlock", "Email block · 600×600", 600, 600),

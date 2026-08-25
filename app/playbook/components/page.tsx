@@ -2,7 +2,19 @@ import type { Metadata } from "next";
 import { Grid, PlaybookPage, Sample, Section } from "@/components/playbook/Page";
 import { InputsDemo } from "@/components/playbook/InputsDemo";
 import { TabsDemo } from "@/components/playbook/TabsDemo";
-import { Avatar, Btn, Icon } from "@/components/ui";
+import {
+  ArticleCard,
+  Avatar,
+  Btn,
+  EmptyState,
+  FieldNote,
+  Icon,
+  MoodPill,
+  Placeholder,
+  Skeleton,
+  TabBar,
+} from "@/components/ui";
+import { PIECES } from "@/lib/fixtures";
 import styles from "./components.module.css";
 
 export const metadata: Metadata = {
@@ -31,11 +43,25 @@ const MENU: [string, React.ReactNode][] = [
   ["Save as image card", <Icon.share key="s" />],
 ];
 
+const PILL_MOODS: Array<[string, string]> = [
+  ["Tender", "var(--mood-tender)"],
+  ["Restless", "var(--mood-restless)"],
+  ["Melancholy", "var(--mood-melancholy)"],
+  ["Still", "var(--mood-still)"],
+];
+
+const TONES = [
+  { tone: "hint" as const, text: "Your letters are private until you send them." },
+  { tone: "ok" as const, text: "Kept. This draft is on your shelf." },
+  { tone: "caution" as const, text: "This letter has been open for an hour. It has not been kept yet." },
+  { tone: "alarm" as const, text: "That address didn\u2019t take. Check it and try once more." },
+];
+
 export default function ComponentsPage() {
   return (
     <PlaybookPage
       href="/playbook/components"
-      eyebrow="05 · COMPONENTS"
+      eyebrow="06 · COMPONENTS"
       title={
         <>
           The pieces,{" "}
@@ -199,6 +225,124 @@ export default function ComponentsPage() {
             <Btn variant="primary" size="md" full>Become a patron · $4/mo</Btn>
           </div>
         </Sample>
+      </Section>
+
+      <Section
+        title="LETTER CARD · MOOD PILLS · TAB BAR · PLACEHOLDER"
+        note="Four pieces the catalogue had been shipping without ever showing. The letter card carries a heart count but no share count and no follower count; the tab bar carries five destinations and no notifications tab, because there is nothing to notify about."
+      >
+        <Grid min={280}>
+          <Sample label="ARTICLECARD">
+            <ArticleCard piece={PIECES[0]} />
+          </Sample>
+
+          <Sample label="MOODPILL">
+            <div className={styles.wrapRow}>
+              {PILL_MOODS.map(([label, color], i) => (
+                <MoodPill key={label} label={label} color={color} selected={i === 0} />
+              ))}
+            </div>
+            <div className={styles.wrapRow} style={{ marginTop: 16 }}>
+              <MoodPill label="Burning" color="var(--mood-burning)" size="lg" selected />
+              <MoodPill label="Untethered" color="var(--mood-untethered)" size="lg" />
+            </div>
+          </Sample>
+
+          <Sample label="TABBAR · IN A SCREEN">
+            <div className={styles.screen}>
+              <div className={styles.screenBody}>
+                <div className="mono" style={{ fontSize: 9 }}>TONIGHT</div>
+                <div className="title-sm">What the river kept</div>
+                <p className="body-sm" style={{ margin: 0 }}>
+                  My grandmother told me the river forgets nothing.
+                </p>
+              </div>
+              <TabBar active="home" />
+            </div>
+          </Sample>
+
+          <Sample label="PLACEHOLDER">
+            <Placeholder h={120} label="cover" />
+            <div style={{ marginTop: 12 }}>
+              <Placeholder h={64} label="portrait" />
+            </div>
+          </Sample>
+        </Grid>
+      </Section>
+
+      <Section
+        title="STATES · EMPTY, LOADING, ANNOTATED"
+        note={`The brand's own empty state is "That's all for tonight." — an evening that has ended, not a failure to produce content. Loading is a slow pulse rather than a shimmer, and a field note keeps the same box whatever it has to say, so telling someone something went wrong never moves the page under them.`}
+      >
+        <Grid min={280}>
+          <Sample label="EMPTYSTATE">
+            <EmptyState
+              title="That&rsquo;s all for tonight."
+              body="The lamp will be lit again at sunset. Six new letters are already being written."
+              action={<Btn size="sm" variant="ghost">Browse by mood</Btn>}
+            />
+          </Sample>
+
+          <Sample label="SKELETON">
+            <div className={styles.skeletonCard}>
+              <div className={styles.skeletonRow}>
+                <Skeleton width={20} height={20} radius="999px" />
+                <Skeleton width="40%" height={10} />
+              </div>
+              <Skeleton width="85%" height={22} />
+              <Skeleton height={12} />
+              <Skeleton width="60%" height={12} />
+            </div>
+          </Sample>
+
+          <Sample label="FIELDNOTE · FOUR TONES">
+            <div className={styles.noteStack}>
+              {TONES.map((t) => (
+                <FieldNote key={t.tone} tone={t.tone}>
+                  <span className="mono" style={{ fontSize: 9, color: "inherit" }}>
+                    {t.tone.toUpperCase()}
+                  </span>{" "}
+                  {t.text}
+                </FieldNote>
+              ))}
+            </div>
+          </Sample>
+
+          <Sample label="THE SAME FIELD, TWICE">
+            <div className={styles.field}>
+              <label className="mono" htmlFor="pb-note-hint" style={{ fontSize: 9 }}>
+                WHERE TO SEND IT
+              </label>
+              <input
+                id="pb-note-hint"
+                className={styles.fieldInput}
+                type="email"
+                defaultValue="ines@"
+                readOnly
+                aria-describedby="pb-note-hint-note"
+              />
+              <FieldNote id="pb-note-hint-note" tone="hint">
+                We send one letter a week. Nothing else, ever.
+              </FieldNote>
+            </div>
+            <div className={styles.field} style={{ marginTop: 20 }}>
+              <label className="mono" htmlFor="pb-note-alarm" style={{ fontSize: 9 }}>
+                WHERE TO SEND IT
+              </label>
+              <input
+                id="pb-note-alarm"
+                className={`${styles.fieldInput} ${styles.fieldInputAlarm}`}
+                type="email"
+                defaultValue="ines@"
+                readOnly
+                aria-describedby="pb-note-alarm-note"
+              />
+              <FieldNote id="pb-note-alarm-note" tone="alarm">
+                That address didn&rsquo;t take. Check it and try once more.
+              </FieldNote>
+            </div>
+          </Sample>
+        </Grid>
       </Section>
 
       <Section title="AVATARS">

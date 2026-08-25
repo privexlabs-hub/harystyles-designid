@@ -16,7 +16,7 @@
  */
 import { downloadZip } from "client-zip";
 import { TEMPLATES, getTemplate, templatesIn } from "@/lib/templates/registry";
-import type { CategoryId, Variant } from "@/lib/templates/types";
+import type { CategoryId, FieldValues, Variant } from "@/lib/templates/types";
 import { DEFAULT_VARIANT } from "@/lib/templates/types";
 import { detectCapability } from "./capability";
 import { RenderClient } from "./client";
@@ -46,6 +46,29 @@ const BYTES_PER_PIXEL: Record<FormatId, number> = {
 };
 const SVG_FLAT_BYTES = 60 * 1024;
 
+/**
+ * What one job will weigh.
+ *
+ * Embedded images are charged separately because Satori inlines them verbatim
+ * as base64 data URIs: an SVG carrying a 2 MB photograph is a ~2.7 MB file, and
+ * charging it the flat 60 KiB let a project of photos sail past the in-memory
+ * ceiling and only fail once the tab had already run out of heap. Base64 costs
+ * four bytes per three, hence the 4/3.
+ */
+function estimateBytes(format: FormatId, pixels: number, imageBytes: number): number {
+  const embedded = Math.round((imageBytes * 4) / 3);
+  return format === "svg"
+    ? SVG_FLAT_BYTES + embedded
+    : Math.round(pixels * BYTES_PER_PIXEL[format]) + embedded;
+}
+
+function imageBytesOf(images: Record<string, Uint8Array> | undefined): number {
+  if (!images) return 0;
+  let total = 0;
+  for (const bytes of Object.values(images)) total += bytes.byteLength;
+  return total;
+}
+
 // ---------------------------------------------------------------- scope
 
 export type BatchScope =
@@ -56,7 +79,27 @@ export type BatchScope =
    * axes multiply into thousands of artboards, which is a decision a person
    * should make deliberately rather than discover halfway through a download.
    */
-  | { kind: "everything"; variants?: Partial<Variant>[] };
+  | { kind: "everything"; variants?: Partial<Variant>[] }
+  /**
+   * The pages of the open project, in order.
+   *
+   * Unlike the other three, this scope does not enumerate the catalogue: the
+   * pages ARE the list, each already carrying its own size, variant, slide and
+   * copy. So it never touches the template/variant/format loop below — it is a
+   * different shape of job, not a narrower filter over the same one.
+   */
+  | { kind: "project"; pages: BatchPage[] };
+
+/** One page of a project, resolved: everything a render needs, by value. */
+export type BatchPage = {
+  templateId: string;
+  sizeId?: string;
+  variant: Variant;
+  slide?: number;
+  values?: FieldValues;
+  /** Photographs, already read out of IndexedDB by the caller. */
+  images?: Record<string, Uint8Array>;
+};
 
 export type BatchOptions = {
   formats?: FormatId[];
@@ -68,6 +111,15 @@ export type BatchOptions = {
   variants?: Partial<Variant>[];
   /** Overrides capability.ts. Still clamped to 2. */
   concurrency?: number;
+  /**
+   * What the user has typed, keyed by template id.
+   *
+   * A batch used to render stock copy even for templates the user had edited,
+   * which made "export everything" produce a catalogue rather than their brand
+   * assets. Anything absent here still falls back to the template's defaults
+   * inside renderTemplate.
+   */
+  drafts?: Record<string, FieldValues>;
 };
 
 // ---------------------------------------------------------------- plan
@@ -89,6 +141,15 @@ export type BatchJob = {
   /** Output pixels, for the estimate and the ceiling check. */
   pixels: number;
   estimatedBytes: number;
+  /**
+   * Copy and photographs for THIS job.
+   *
+   * The catalogue scopes look their copy up per template in `opts.drafts`,
+   * which cannot express two pages of one template holding different words.
+   * When these are set they win.
+   */
+  values?: FieldValues;
+  images?: Record<string, Uint8Array>;
 };
 
 export type BatchRefusal = {
@@ -116,6 +177,10 @@ function variantFor(templateId: string, override?: Partial<Variant>): Variant {
 export function planBatch(scope: BatchScope, opts: BatchOptions = {}): BatchPlan {
   const formats = opts.formats?.length ? opts.formats : (["png"] as FormatId[]);
   const scale = opts.scale ?? 2;
+
+  // Early branch, before the catalogue is consulted at all: a project's pages
+  // are the job list.
+  if (scope.kind === "project") return sealPlan(projectJobs(scope.pages, formats, scale));
 
   const templates =
     scope.kind === "template"
@@ -164,16 +229,78 @@ export function planBatch(scope: BatchScope, opts: BatchOptions = {}): BatchPlan
               category: template.category,
             }),
             pixels: descriptor.id === "svg" ? 0 : pixels,
-            estimatedBytes:
-              descriptor.id === "svg"
-                ? SVG_FLAT_BYTES
-                : Math.round(pixels * BYTES_PER_PIXEL[format]),
+            // No images: these scopes render the catalogue, whose copy comes
+            // from opts.drafts and carries no bytes of its own.
+            estimatedBytes: estimateBytes(format, pixels, 0),
           });
         }
       }
     }
   }
 
+  return sealPlan(jobs);
+}
+
+/**
+ * A project's pages, one job per page per format.
+ *
+ * The ordinal in the filename is 1-based page order and exists because the rest
+ * of the naming is deterministic by design — two pages of the same template and
+ * variant would otherwise write the same path twice and the second would win.
+ */
+function projectJobs(pages: BatchPage[], formats: FormatId[], scale: number): BatchJob[] {
+  const jobs: BatchJob[] = [];
+
+  pages.forEach((page, index) => {
+    const template = getTemplate(page.templateId);
+    if (!template) return;
+    const size = (page.sizeId && template.sizes.find((s) => s.id === page.sizeId)) || template.sizes[0];
+    const imageBytes = imageBytesOf(page.images);
+
+    for (const format of formats) {
+      const descriptor = formatById(format);
+      const effectiveScale = descriptor.scalable ? scale : 1;
+      const pixels = size.w * size.h * effectiveScale * effectiveScale;
+
+      jobs.push({
+        templateId: template.id,
+        name: template.name,
+        category: template.category,
+        sizeId: size.id,
+        width: size.w * effectiveScale,
+        height: size.h * effectiveScale,
+        variant: page.variant,
+        format,
+        scale: effectiveScale,
+        // A page shows ONE slide of a carousel, so it is a single file — the
+        // slide index selects it rather than expanding into a folder.
+        slide: page.slide,
+        path: assetPath({
+          templateId: template.id,
+          variant: page.variant,
+          scale: effectiveScale,
+          ext: descriptor.ext,
+          category: template.category,
+          ordinal: index + 1,
+        }),
+        pixels: descriptor.id === "svg" ? 0 : pixels,
+        estimatedBytes: estimateBytes(format, pixels, imageBytes),
+        values: page.values,
+        images: page.images,
+      });
+    }
+  });
+
+  return jobs;
+}
+
+/**
+ * The ceilings, applied to a finished job list.
+ *
+ * Shared by every scope so a project export cannot quietly acquire a different
+ * limit from the catalogue exports.
+ */
+function sealPlan(jobs: BatchJob[]): BatchPlan {
   const totalPixels = jobs.reduce((sum, j) => sum + j.pixels, 0);
   const estimatedBytes = jobs.reduce((sum, j) => sum + j.estimatedBytes, 0);
 
@@ -330,6 +457,10 @@ async function renderJob(
     sizeId: job.sizeId,
     variant: job.variant,
     slide: job.slide,
+    // Per-job copy wins: a project page carries its own overrides, which the
+    // per-template drafts map has no way to represent.
+    values: job.values ?? opts.drafts?.[job.templateId],
+    images: job.images,
   };
   const shared = { client, scale: job.scale };
 

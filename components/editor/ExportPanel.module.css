@@ -103,9 +103,36 @@
   cursor: progress;
 }
 
+.actions {
+  display: flex;
+  gap: var(--s-2);
+}
+.actions .primary {
+  flex: 1;
+}
+
+.secondary {
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: var(--t-sm);
+  cursor: pointer;
+}
+.secondary:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.secondary:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* Four scopes, two rows — three across left the fourth orphaned on its own. */
 .batch {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--s-2);
 }
 .batch button {

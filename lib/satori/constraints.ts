@@ -49,7 +49,11 @@ export type RuleId =
   | "css-variable"
   | "implicit-display"
   | "line-clamp"
-  | "class-component";
+  | "class-component"
+  | "image-src"
+  | "image-remote"
+  | "image-size"
+  | "image-clip";
 
 export const RULES: Record<RuleId, { severity: Severity; summary: string }> = {
   "display-grid": { severity: "error", summary: "Satori throws on display: grid" },
@@ -70,7 +74,83 @@ export const RULES: Record<RuleId, { severity: Severity; summary: string }> = {
   "implicit-display": { severity: "error", summary: "Satori throws on an element with more than one child and no explicit display" },
   "line-clamp": { severity: "error", summary: "line clamping only applies to display: block" },
   "class-component": { severity: "error", summary: "class components are not supported" },
+  "image-src": { severity: "warn", summary: "an <img> with no src draws nothing" },
+  "image-remote": { severity: "error", summary: "the worker has no network; a remote image never loads" },
+  "image-size": { severity: "error", summary: "Satori cannot size an image it cannot measure" },
+  "image-clip": { severity: "warn", summary: "object-fit: cover overflows a container that does not clip" },
 };
+
+// ---------------------------------------------------------------- image rules
+
+/**
+ * What Satori will and will not do with an `<img>`.
+ *
+ * Read out of node_modules/satori/dist/index.js rather than recalled: it decodes
+ * a base64 data URI and reads intrinsic dimensions straight from the PNG, JPEG,
+ * GIF or WebP header, so width and height are optional for those. A
+ * percent-encoded data URI resolves without a size and throws
+ * "Image size cannot be determined" unless both are given.
+ */
+function checkImage(
+  props: Record<string, unknown> | undefined,
+  path: string,
+): Finding[] {
+  const findings: Finding[] = [];
+  const src = typeof props?.src === "string" ? props.src : "";
+  const style = (props?.style ?? {}) as Record<string, unknown>;
+  const hasSize = props?.width != null || props?.height != null;
+
+  if (!src) {
+    // Only a warning: the lint renders templates with their DEFAULT props, and
+    // an image template's default src is empty by design. An error here would
+    // fail the whole catalogue for a field nobody has filled in yet.
+    findings.push({
+      path,
+      rule: "image-src",
+      severity: "warn",
+      property: "src",
+      value: "(empty)",
+      message: `${RULES["image-src"].summary} — fine for a default, wrong in a finished artboard`,
+    });
+    return findings;
+  }
+
+  if (/^https?:/i.test(src)) {
+    findings.push({
+      path,
+      rule: "image-remote",
+      severity: "error",
+      property: "src",
+      value: src.slice(0, 48),
+      message: `${RULES["image-remote"].summary} — embed the bytes instead`,
+    });
+  }
+
+  // A data URI that is not base64 carries no readable header.
+  if (/^data:/i.test(src) && !/;base64,/i.test(src) && !hasSize) {
+    findings.push({
+      path,
+      rule: "image-size",
+      severity: "error",
+      property: "src",
+      value: src.slice(0, 48),
+      message: `${RULES["image-size"].summary} — use base64, or set width and height`,
+    });
+  }
+
+  if (String(style.objectFit) === "cover" && String(style.overflow ?? "") !== "hidden") {
+    findings.push({
+      path,
+      rule: "image-clip",
+      severity: "warn",
+      property: "objectFit",
+      value: "cover",
+      message: `${RULES["image-clip"].summary} — clip on the image or its container`,
+    });
+  }
+
+  return findings;
+}
 
 // ---------------------------------------------------------------- style rules
 
@@ -275,6 +355,8 @@ export function walkElement(element: ReactNode, path = "", opts: WalkOptions = {
     if (type === "svg") return;
 
     findings.push(...checkStyle(props?.style, here));
+
+    if (type === "img") findings.push(...checkImage(props, here));
 
     const children = childList(props?.children);
 

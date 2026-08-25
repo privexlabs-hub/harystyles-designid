@@ -15,6 +15,7 @@ import { AVATAR_TEMPLATES } from "./catalog/avatar";
 import { ADS_TEMPLATES } from "./catalog/ads";
 import { EMAIL_TEMPLATES } from "./catalog/email";
 import { WEB_TEMPLATES } from "./catalog/web";
+import { DOCUMENT_TEMPLATES } from "./catalog/document";
 import { CATEGORIES, type CategoryId, type TemplateDef } from "./types";
 
 /** Declaration order is the order the library shows them in. */
@@ -30,6 +31,7 @@ export const TEMPLATES: TemplateDef[] = [
   ...ADS_TEMPLATES,
   ...EMAIL_TEMPLATES,
   ...WEB_TEMPLATES,
+  ...DOCUMENT_TEMPLATES,
 ];
 
 /** Guards against two catalog files claiming the same id. */

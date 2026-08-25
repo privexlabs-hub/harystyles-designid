@@ -4,6 +4,9 @@
   display: grid;
   grid-template-columns: 280px 1fr 320px;
   min-height: 0;
+  /* The containing block for .skips, which must sit over the editor without
+     being part of it. */
+  position: relative;
 }
 
 .library,
@@ -22,16 +25,21 @@
 .toolbar {
   display: flex;
   align-items: center;
-  gap: var(--s-3);
+  gap: var(--s-2);
   padding: var(--s-2) var(--s-3);
   border-bottom: 1px solid var(--border-soft);
   background: var(--bg-raised);
+  /* It carries history, page and save controls now. Wrapping to a second row
+     is the right answer on a narrow column; overflowing the page is not. */
+  flex-wrap: wrap;
+  row-gap: var(--s-2);
 }
 
 .history {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--s-1);
-  margin: 0 auto;
+  margin-right: auto;
 }
 .history button {
   min-width: 34px;
@@ -125,4 +133,71 @@
   .sheetButton {
     display: inline-flex;
   }
+
+  /*
+    One row on a phone, with the two sheet triggers pinned to the sides they
+    correspond to: Templates on the left where the library lives, Edit on the
+    right where the inspector does. Wrapping put Edit alone on a second row,
+    away from its own side of the screen and costing height the artboard wants.
+
+    Only the middle group gives way, scrolling like the pages rail does.
+  */
+  .toolbar {
+    flex-wrap: nowrap;
+  }
+  .sheetButton {
+    flex-shrink: 0;
+  }
+  .history {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    min-width: 0;
+    /* A hard clip mid-word reads as a rendering fault. Fading the edge says
+       "there is more this way", which is what is actually true. */
+    mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 24px), transparent 100%);
+    padding-right: var(--s-2);
+  }
+  .history button {
+    flex-shrink: 0;
+  }
+}
+
+/*
+  Out of the grid entirely.
+
+  This was a plain <nav> and therefore a grid item: it took column one, pushed
+  library, centre and inspector each one column right, and wrapped the inspector
+  onto a second row. Grid items stretch, so it was also a 280x422 block of
+  nothing at desktop and a full-width 394px block on a phone.
+
+  Positioning it removes it from flow — no track, no height — while leaving the
+  links exactly where they were.
+*/
+.skips {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: var(--z-toast);
+}
+
+/* Off-screen until focused, then pinned over the toolbar. */
+.skips a {
+  position: absolute;
+  left: -9999px;
+  top: var(--s-2);
+  z-index: var(--z-toast);
+  padding: var(--s-2) var(--s-4);
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  border-radius: var(--r-pill);
+  font-size: var(--t-sm);
+  color: var(--fg);
+}
+.skips a:focus {
+  left: var(--s-4);
+}
+.skips a:nth-child(2):focus {
+  left: 14rem;
 }

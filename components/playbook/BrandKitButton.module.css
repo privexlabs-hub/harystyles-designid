@@ -1,0 +1,36 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+}
+
+/* Matches the .download tiles above it — the kit is one more thing to take,
+   not a different kind of control. */
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  width: 100%;
+  padding: var(--s-3) var(--s-4);
+  background: var(--bg-card);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--r-md);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--dur-2) var(--ease-out);
+}
+.button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.note {
+  margin: 0;
+  font-size: 10px;
+  color: var(--fg-subtle);
+}

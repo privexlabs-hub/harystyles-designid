@@ -1,0 +1,164 @@
+.rail {
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  border-top: 1px solid var(--border-soft);
+  background: var(--bg-raised);
+  flex-shrink: 0;
+  /* The rail itself no longer scrolls — only the strip inside it does. When the
+     whole rail was the scroll container, the actions travelled away with the
+     pages. */
+  min-width: 0;
+}
+
+/* The pages. Many of them scroll sideways rather than shrinking to nothing. */
+.strip {
+  display: flex;
+  align-items: stretch;
+  gap: var(--s-3);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  /* Takes the space the pinned actions do not, and no more. */
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-bottom: 2px;
+}
+
+.page {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  color: var(--fg-faint);
+}
+
+.thumb {
+  width: 72px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--ink-1000);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.page[data-active="true"] .thumb {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.page[data-active="true"] {
+  color: var(--accent);
+}
+
+/* The page being dragged, and the gap it will drop into. */
+.page[data-dragging="true"] {
+  opacity: 0.4;
+}
+.page[data-dropbefore="true"]::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--s-3) / -2 - 1px);
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.pending {
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(45deg, var(--ink-900) 0 6px, var(--ink-800) 6px 12px);
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.add {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 72px;
+  align-self: flex-start;
+  padding: var(--s-3) var(--s-2);
+  border: 1px dashed var(--border);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: var(--t-xs);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.add:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Pinned: the actions stay put however many pages there are. */
+.tools {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-1);
+  justify-content: center;
+  padding-left: var(--s-3);
+  border-left: 1px solid var(--border-soft);
+  flex-shrink: 0;
+}
+
+.tool {
+  min-height: 28px;
+  padding: 0 var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: 11px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.tool:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.tool:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.note {
+  align-self: center;
+  max-width: 26ch;
+  padding-left: var(--s-3);
+  font-size: 10px;
+  line-height: 1.45;
+  color: var(--fg-faint);
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+/* The explanation is the first thing to go when the column is tight; the pages
+   and their controls are not. */
+@media (max-width: 1200px) {
+  .note {
+    display: none;
+  }
+}

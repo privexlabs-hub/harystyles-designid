@@ -9,6 +9,9 @@
 import { SIZES } from "../sizes";
 import {
   COMPARISON_KIT,
+  GRID_KIT,
+  PHOTO_KIT,
+  TIMELINE_KIT,
   CTA_KIT,
   EVENT_KIT,
   HEADLINE_KIT,
@@ -216,4 +219,120 @@ export const SQUARE_TEMPLATES = [
     url: "harystyles.com",
     lit: true,
   }, { background: "lamp" }),
+
+  // ---------------------------------------------------------------- additions
+  //
+  // Shapes the brand publishes that the original set had no home for. Each one
+  // earns its place by being something harystyles would actually post, not by
+  // filling a slot in a checklist.
+
+  square("timeline", "Timeline", "How something got here, in dated moments.", TIMELINE_KIT, {
+    eyebrow: "A writer's year",
+    headline: "Thirty-four letters, one at a time.",
+    moments: [
+      "March :: Ines posts her first letter. Four people read it.",
+      "June :: A notebook — 'Letters from a leaving city' — eight letters, read in order.",
+      "September :: The hundredth patron. She writes to every one of them by hand.",
+      "December :: 412 patrons. She gives up the other job.",
+    ],
+    footLeft: "harystyles.com/ines",
+    footRight: "",
+  }),
+
+  square("feature-grid", "Feature grid", "Several things at once, given equal weight.", GRID_KIT, {
+    eyebrow: "What you get",
+    headline: "Everything, and nothing else.",
+    cells: [
+      "Five letters :: Hand-picked each evening, then the lamp goes out.",
+      "Six moods :: Read by feeling rather than by topic.",
+      "A private shelf :: The lines you kept, shown to nobody.",
+      "One price :: $4 a month, to one writer. 90% goes to them.",
+    ],
+    footLeft: "harystyles.com",
+    footRight: "",
+  }, { layout: 2 }),
+
+  square("patronage", "What patronage costs", "One price, said plainly.", STAT_KIT, {
+    eyebrow: "Patronage",
+    figure: "$4",
+    label: "a month, to one writer",
+    body: "Not a tier, not a plan, not an unlock. Ninety per cent of it goes to them. Cancel any time, and nothing you kept goes away.",
+    footLeft: "harystyles.com",
+    footRight: "90% to the writer",
+  }, { background: "lamp", layout: 1 }),
+
+  square("thank-you", "Thank you", "Gratitude, without a campaign attached.", HEADLINE_KIT, {
+    eyebrow: "A year of letters",
+    headline: "10,000 letters,|and every one of you.",
+    body: "Written mostly at night, mostly about leaving. We did not expect this and we are not taking it for granted.",
+    footLeft: "harystyles.com",
+    footRight: "❦",
+  }, { background: "lamp", layout: 1 }),
+
+  square("seasonal", "Seasonal", "The turning of a season, in the brand's own weather.", HEADLINE_KIT, {
+    eyebrow: "The longest night",
+    headline: "Midwinter.|The lamp stays on.",
+    body: "Tonight's five are all about the dark — not to cheer you out of it, but to sit in it with you for a while.",
+    footLeft: "harystyles.com",
+    footRight: "December 21",
+  }, { background: "lamp", layout: 2 }),
+
+  square("press", "Press announcement", "For the record, stated flatly.", SPOTLIGHT_KIT, {
+    eyebrow: "For the record",
+    title: "harystyles raises nothing, hires two.",
+    body: "We are not announcing a round. We are announcing that two people who care about reading are joining, and that the price stays at four pounds.",
+    evidenceLabel: "Press",
+    evidence: "press@harystyles.com",
+    footLeft: "harystyles.com/press",
+    footRight: "",
+  }, { background: "rule", layout: 3 }),
+
+  square("award", "Recognition", "Someone else said it, so we do not have to.", QUOTE_KIT, {
+    quote: "The most humane reading experience on the internet right now.",
+    attribution: "The Quiet Review",
+    detail: "Reading apps of the year",
+    hue: 160,
+    footLeft: "harystyles.com",
+    footRight: "",
+  }, { layout: 3 }),
+
+  square("resource", "Something to take away", "A notebook, offered rather than gated.", SPOTLIGHT_KIT, {
+    eyebrow: "Free to keep",
+    title: "Letters from a leaving city",
+    body: "Ines's first notebook — eight letters about departure, gathered in order and set for print. No address required; it is simply there.",
+    evidenceLabel: "Download",
+    evidence: "8 letters · PDF",
+    footLeft: "harystyles.com/notebooks",
+    footRight: "",
+  }, { layout: 1 }),
+
+  square("podcast-episode", "Podcast episode", "A letter, read aloud.", SPOTLIGHT_KIT, {
+    eyebrow: "Read aloud · 12",
+    title: "On the small grief of leaving a city",
+    body: "Ines Marlowe reads her own letter, and talks for a while afterwards about the kettle, and why it was the last thing she packed.",
+    evidenceLabel: "Listen",
+    evidence: "24 min · wherever you listen",
+    footLeft: "harystyles.com/aloud",
+    footRight: "",
+  }, { background: "grain", layout: 2 }),
+
+  square("photo-post", "Photograph", "A picture, with the words kept off it.", PHOTO_KIT, {
+    eyebrow: "From the desk",
+    headline: "Where the letters get written.",
+    body: "A kitchen table, a lamp, and a kettle that has outlived two apartments.",
+    photo: "",
+    caption: "",
+    footLeft: "harystyles.com",
+    footRight: "",
+  }, { layout: 0 }),
+
+  square("founder-portrait", "Portrait", "One person, named.", PHOTO_KIT, {
+    eyebrow: "Who writes here",
+    headline: "Ines Marlowe",
+    body: "",
+    photo: "",
+    caption: "writes from somewhere coastal · 34 letters",
+    footLeft: "harystyles.com/ines",
+    footRight: "",
+  }, { layout: 3 }),
 ];

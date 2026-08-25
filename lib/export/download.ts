@@ -27,6 +27,15 @@ export type NameParts = {
   slide?: number;
   /** Overrides the category taken from the template id. */
   category?: string;
+  /**
+   * 1-based position within a project, prefixed as `page-01--`.
+   *
+   * Only project exports pass it. The rest of the naming is deliberately
+   * deterministic, but a project can hold the same template and variant twice,
+   * and two identical names in one zip is a file silently lost. The ordinal is
+   * also the reading order, which is what a multi-page project is FOR.
+   */
+  ordinal?: number;
 };
 
 /**
@@ -34,16 +43,17 @@ export type NameParts = {
  * `carousel/{slug}/slide-01@2x.png`. Deterministic, so re-running a batch
  * overwrites rather than accumulating "(1)" copies.
  */
-export function assetPath({ templateId, variant, scale, ext, slide, category }: NameParts): string {
+export function assetPath({ templateId, variant, scale, ext, slide, category, ordinal }: NameParts): string {
   const slug = templateSlug(templateId);
+  const prefix = ordinal === undefined ? "" : `page-${String(ordinal).padStart(2, "0")}--`;
   const dir = category ?? templateId.slice(0, Math.max(0, templateId.lastIndexOf("/"))) ?? "";
 
   if (slide !== undefined) {
     const n = String(slide + 1).padStart(2, "0");
-    return `${dir}/${slug}/slide-${n}${scaleSuffix(scale)}.${ext}`;
+    return `${dir}/${prefix}${slug}/slide-${n}${scaleSuffix(scale)}.${ext}`;
   }
 
-  return `${dir}/${slug}--${variant.theme}-${variant.accent}${scaleSuffix(scale)}.${ext}`;
+  return `${dir}/${prefix}${slug}--${variant.theme}-${variant.accent}${scaleSuffix(scale)}.${ext}`;
 }
 
 /** The same name without directories, for a one-off save from the editor. */

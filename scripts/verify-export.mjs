@@ -94,6 +94,20 @@ async function download(format, scale) {
   return { name: dl.suggestedFilename(), bytes: buf.length, buf };
 }
 
+/**
+ * Types into a labelled field in the inspector.
+ *
+ * The label sits in a sibling span rather than wrapping the control, so the
+ * field is found by walking from the label text to the input beside it.
+ */
+async function typeInto(label, text) {
+  const row = page.locator("label").filter({ hasText: label }).first();
+  const field = row.locator("input, textarea").first();
+  await field.fill(text);
+  // The store coalesces typing runs; give it past the merge window.
+  await page.waitForTimeout(900);
+}
+
 const rows = [];
 const check = (label, got, want) => {
   const ok = got === want;
@@ -102,6 +116,35 @@ const check = (label, got, want) => {
 };
 
 await selectTemplate("square/big-stat", "Big stat card");
+
+/**
+ * The check that matters most: does what you typed reach the file?
+ *
+ * This is the whole promise of the editor, and it was broken for a long time
+ * without anyone noticing — because this script used to export the defaults and
+ * assert only the dimensions, which are identical either way. Comparing the
+ * bytes of a default render against an edited one is the only thing that
+ * actually proves the copy travelled.
+ */
+{
+  const before = await download("PNG", 1);
+  await typeInto("Figure", "8,412");
+  await typeInto("What it counts", "letters written this year");
+  const after = await download("PNG", 1);
+
+  check(
+    "an edited artboard exports different pixels from the default",
+    Buffer.compare(before.buf, after.buf) !== 0,
+    true,
+  );
+  console.log(
+    `  default ${(before.bytes / 1024).toFixed(0)} KB \u2192 edited ${(after.bytes / 1024).toFixed(0)} KB`,
+  );
+
+  // Put the copy back so the dimension checks below run against the defaults.
+  await page.locator("button", { hasText: /^Reset to the default copy$/ }).first().click();
+  await page.waitForTimeout(600);
+}
 
 for (const scale of [1, 2, 3]) {
   const { name, bytes, buf } = await download("PNG", scale);

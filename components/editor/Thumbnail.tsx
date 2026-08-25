@@ -73,6 +73,8 @@ function thumbnailUrl(template: TemplateDef): Promise<string> {
 export function Thumbnail({ template }: { template: TemplateDef }) {
   const ref = useRef<HTMLDivElement>(null);
   const [url, setUrl] = useState(() => cache.get(template.id) ?? null);
+  const [failed, setFailed] = useState(false);
+  const [attempt, setAttempt] = useState(0);
   const size = template.sizes[0];
 
   useEffect(() => {
@@ -86,8 +88,17 @@ export function Thumbnail({ template }: { template: TemplateDef }) {
         if (!entries.some((e) => e.isIntersecting)) return;
         io.disconnect();
         thumbnailUrl(template)
-          .then((u) => !cancelled && setUrl(u))
-          .catch((err) => console.error(`Thumbnail failed for ${template.id}`, err));
+          .then((u) => {
+            if (cancelled) return;
+            setUrl(u);
+            setFailed(false);
+          })
+          .catch((err) => {
+            console.error(`Thumbnail failed for ${template.id}`, err);
+            // Leaving the striped placeholder for ever reads as "still loading"
+            // and never resolves. Say it failed, and offer another go.
+            if (!cancelled) setFailed(true);
+          });
       },
       { rootMargin: "200px" },
     );
@@ -97,7 +108,7 @@ export function Thumbnail({ template }: { template: TemplateDef }) {
       cancelled = true;
       io.disconnect();
     };
-  }, [template, url]);
+  }, [template, url, attempt]);
 
   return (
     <div
@@ -108,6 +119,20 @@ export function Thumbnail({ template }: { template: TemplateDef }) {
       {url ? (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img src={url} alt="" className={styles.image} loading="lazy" />
+      ) : failed ? (
+        <button
+          type="button"
+          className={styles.retry}
+          onClick={(e) => {
+            // The card underneath opens the template; this only redraws it.
+            e.stopPropagation();
+            inflight.delete(template.id);
+            setFailed(false);
+            setAttempt((n) => n + 1);
+          }}
+        >
+          Draw again
+        </button>
       ) : (
         <span className={styles.pending} />
       )}

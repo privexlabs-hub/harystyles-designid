@@ -46,6 +46,9 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <Link href="/shelf" className={styles.link} data-active={isActive("/shelf")}>
+            Shelf
+          </Link>
           <Link href="/editor" className={styles.editorLink} data-active={isActive("/editor")}>
             Editor
           </Link>

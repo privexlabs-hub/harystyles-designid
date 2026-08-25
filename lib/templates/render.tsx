@@ -16,6 +16,8 @@ export type RenderRequest = {
   size?: Size;
   variant?: Partial<Variant>;
   values?: FieldValues;
+  /** Field key → an <img> src. See Ctx.image for why this is a string. */
+  images?: Record<string, string>;
   /** Which slide of a carousel. Ignored by everything else. */
   slide?: number;
 };
@@ -29,6 +31,7 @@ export function renderTemplate({
   size,
   variant,
   values,
+  images,
   slide = 0,
 }: RenderRequest): ReactElement {
   const resolvedSize = size ?? template.sizes[0];
@@ -42,6 +45,7 @@ export function renderTemplate({
     size: resolvedSize,
     variant: { ...resolvedVariant, layout },
     values: { ...template.defaults, ...values },
+    images,
   });
 
   return <Artboard ctx={ctx}>{template.render(ctx, slide)}</Artboard>;

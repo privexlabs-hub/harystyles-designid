@@ -58,3 +58,65 @@ export const GRAIN_SIZE = ${TILE};
 );
 
 console.log(`grain tile: ${(png.length / 1024).toFixed(1)} KiB → lib/templates/textures.ts`);
+
+// ---------------------------------------------------------------- backgrounds
+//
+// Fields a writer can drop into a photo template when they have no photograph.
+// Generated rather than sourced: nothing here needs a licence, nothing can drift
+// off-palette, and a brand about quiet reading has no business shipping stock
+// pictures of people pointing at laptops.
+
+const BG_DIR = join(ROOT, "public/assets/backgrounds");
+await mkdir(BG_DIR, { recursive: true });
+
+const INK = "#0d0d18";
+const AMBER = "#db703b";
+const VELLUM = "#f1eae0";
+const DUSK = "#2b1d18";
+
+const backgrounds = {
+  lamp: `<defs><radialGradient id="g" cx="50%" cy="38%" r="70%">
+      <stop offset="0%" stop-color="${AMBER}" stop-opacity="0.42"/>
+      <stop offset="55%" stop-color="${AMBER}" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="${INK}" stop-opacity="0"/>
+    </radialGradient></defs>
+    <rect width="1600" height="1600" fill="${INK}"/>
+    <rect width="1600" height="1600" fill="url(#g)"/>`,
+
+  vellum: `<defs><linearGradient id="g" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="${VELLUM}"/>
+      <stop offset="100%" stop-color="#e2d7c7"/>
+    </linearGradient>
+    <filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" seed="11"/>
+      <feColorMatrix type="saturate" values="0"/></filter></defs>
+    <rect width="1600" height="1600" fill="url(#g)"/>
+    <rect width="1600" height="1600" filter="url(#n)" opacity="0.10"/>`,
+
+  dusk: `<defs><linearGradient id="g" x1="0" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="${DUSK}"/>
+      <stop offset="60%" stop-color="#1a1520"/>
+      <stop offset="100%" stop-color="${INK}"/>
+    </linearGradient></defs>
+    <rect width="1600" height="1600" fill="url(#g)"/>`,
+
+  // Ruled, like the back of a notebook.
+  ruled: `<rect width="1600" height="1600" fill="${INK}"/>
+    ${Array.from({ length: 32 }, (_, i) => `<rect x="0" y="${i * 50 + 25}" width="1600" height="1" fill="#2a2637"/>`).join("")}
+    <rect x="180" y="0" width="1" height="1600" fill="${AMBER}" opacity="0.35"/>`,
+};
+
+// Grain does not compress: a noise field is incompressible by definition, and
+// vellum as PNG came to two megabytes. JPEG carries it at a fraction of that,
+// and the artefacts are invisible under noise. The flat and ruled fields stay
+// PNG, where JPEG would ring along every hairline.
+const LOSSY = new Set(["vellum"]);
+
+for (const [name, body] of Object.entries(backgrounds)) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1600" viewBox="0 0 1600 1600">${body}</svg>`;
+  const lossy = LOSSY.has(name);
+  const out = await sharp(Buffer.from(svg))
+    [lossy ? "jpeg" : "png"](lossy ? { quality: 86 } : { compressionLevel: 9 })
+    .toBuffer();
+  await writeFile(join(BG_DIR, `${name}.${lossy ? "jpg" : "png"}`), out);
+  console.log(`background ${name}: ${(out.length / 1024).toFixed(0)} KiB`);
+}

@@ -16,6 +16,7 @@ const BASE = process.argv[2] ?? process.env.BASE_URL ?? "http://127.0.0.1:3010";
 const ROUTES = [
   "/",
   "/playbook/brand/",
+  "/playbook/voice/",
   "/playbook/type/",
   "/playbook/color/",
   "/playbook/spacing/",
@@ -26,6 +27,7 @@ const ROUTES = [
   "/playbook/screens/studio/",
   "/playbook/screens/marketing/",
   "/editor/",
+  "/shelf/",
 ];
 
 const WIDTHS = [360, 414, 768, 1024, 1440, 1920];

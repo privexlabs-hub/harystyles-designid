@@ -1,5 +1,5 @@
 /**
- * The fourteen layouts every template is built from.
+ * The eighteen layouts every template is built from.
  *
  * Templates are configurations of these, not bespoke components — which is what
  * keeps a hundred and fifty artboards recognisably one system, and what makes a
@@ -19,4 +19,8 @@ export { AvatarLayout, type AvatarProps } from "./avatar";
 export { QuestionLayout, type QuestionProps } from "./question";
 export { StepsLayout, type StepsProps } from "./steps";
 export { EventLayout, type EventProps } from "./event";
-export { Caption, FootLine, LitLine, splitEmphasis } from "./common";
+export { TimelineLayout, type TimelineProps } from "./timeline";
+export { GridLayout, type GridProps } from "./grid";
+export { PhotoLayout, type PhotoProps } from "./photo";
+export { PageLayout, type PageProps } from "./page";
+export { Caption, FootLine, LitLine, measure, splitEmphasis } from "./common";

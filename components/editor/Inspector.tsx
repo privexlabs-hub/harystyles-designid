@@ -1,23 +1,16 @@
 "use client";
 
 import { getTemplate } from "@/lib/templates/registry";
-import { currentSize, useCurrentValues, useEditor } from "@/lib/store/editor";
+import { currentSize, selectPage, useCurrentValues, useEditor } from "@/lib/store/editor";
 import {
   ACCENTS,
   ACCENT_LABELS,
   THEMES,
   THEME_LABELS,
 } from "@/lib/templates/theme";
-import {
-  BACKGROUNDS,
-  BACKGROUND_LABELS,
-  CORNERS,
-  DENSITIES,
-  LOCKUPS,
-  LOCKUP_LABELS,
-  type FieldDef,
-} from "@/lib/templates/types";
+import { BACKGROUNDS, BACKGROUND_LABELS, CORNERS, DEFAULT_VARIANT, DENSITIES, LOCKUPS, LOCKUP_LABELS, type FieldDef } from "@/lib/templates/types";
 import { ExportPanel } from "./ExportPanel";
+import { ImageField } from "./ImageField";
 import styles from "./Inspector.module.css";
 
 /** One labelled control. */
@@ -139,6 +132,17 @@ function Field({ field }: { field: FieldDef }) {
     );
   }
 
+  if (field.kind === "image") {
+    return (
+      <ImageField
+        label={field.label}
+        hint={field.hint}
+        value={typeof raw === "string" ? raw : ""}
+        onChange={(ref) => setField(field.key, ref)}
+      />
+    );
+  }
+
   if (field.kind === "select") {
     return (
       <Row label={field.label} hint={field.hint}>
@@ -170,10 +174,10 @@ function Field({ field }: { field: FieldDef }) {
 }
 
 export function Inspector() {
-  const templateId = useEditor((s) => s.templateId);
-  const sizeId = useEditor((s) => s.sizeId);
-  const variant = useEditor((s) => s.variant);
-  const slide = useEditor((s) => s.slide);
+  const templateId = useEditor((s) => selectPage(s)?.templateId ?? "");
+  const sizeId = useEditor((s) => selectPage(s)?.sizeId ?? null);
+  const variant = useEditor((s) => selectPage(s)?.variant ?? DEFAULT_VARIANT);
+  const slide = useEditor((s) => selectPage(s)?.slide ?? 0);
   const setVariant = useEditor((s) => s.setVariant);
   const selectSize = useEditor((s) => s.selectSize);
   const setSlide = useEditor((s) => s.setSlide);
@@ -197,7 +201,17 @@ export function Inspector() {
         {template.fields.map((f) => (
           <Field key={f.key} field={f} />
         ))}
-        <button type="button" className={styles.ghost} onClick={resetTemplate}>
+        <button
+          type="button"
+          className={styles.ghost}
+          onClick={() => {
+            // One click used to discard every word on the artboard with no way
+            // back except undo, which is not where anyone looks first.
+            if (window.confirm("Put the default copy back? What you have written here is not recoverable.")) {
+              resetTemplate();
+            }
+          }}
+        >
           Reset to the default copy
         </button>
       </section>

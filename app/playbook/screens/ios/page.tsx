@@ -22,7 +22,7 @@ const { w, h } = DEVICE_SIZE.ios;
 export default function IOSScreensPage() {
   return (
     <PlaybookPage
-      eyebrow="06 · Screens"
+      eyebrow="07 · Screens"
       title={
         <>
           The whole loop,

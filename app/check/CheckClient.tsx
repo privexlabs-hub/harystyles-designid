@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { ArtboardPreview } from "@/components/editor/ArtboardPreview";
+import { CanvasErrorBoundary } from "@/components/editor/ErrorBoundary";
 import { pngObjectUrl, templateToPng } from "@/lib/export/png";
 import { TEMPLATES } from "@/lib/templates/registry";
+import type { TemplateDef, Variant } from "@/lib/templates/types";
 import { renderTemplate } from "@/lib/templates/render";
 import { ACCENTS, THEMES, type AccentId, type ThemeId } from "@/lib/templates/theme";
 import { BACKGROUNDS, type BackgroundId } from "@/lib/templates/types";
@@ -11,6 +13,44 @@ import { ConstraintReport } from "./ConstraintReport";
 import styles from "./check.module.css";
 
 const WIDTH = 320;
+
+/**
+ * Renders a template, or a legible failure card instead of taking the page down.
+ *
+ * This page draws all 134 templates at once and is prerendered at build time, so
+ * one throwing template would otherwise fail `next build` — and surfacing that
+ * failure is precisely what this page exists to do.
+ */
+function safeRender(template: TemplateDef, variant: Partial<Variant>) {
+  try {
+    return renderTemplate({ template, variant });
+  } catch (err) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+          width: "100%",
+          height: "100%",
+          padding: 32,
+          background: "var(--bg-card)",
+          border: "2px solid var(--mood-burning)",
+          color: "var(--fg)",
+          fontFamily: "var(--font-mono)",
+          fontSize: 20,
+          overflow: "hidden",
+        }}
+      >
+        <span style={{ color: "var(--mood-burning)" }}>WOULD NOT DRAW</span>
+        <span>{template.id}</span>
+        <span style={{ fontSize: 16, color: "var(--fg-subtle)" }}>
+          {err instanceof Error ? err.message : String(err)}
+        </span>
+      </div>
+    );
+  }
+}
 
 /**
  * Renders every template twice — React DOM on the left, Satori on the right —
@@ -125,12 +165,20 @@ export function CheckClient() {
             </div>
             <div className={styles.pair}>
               <figure className={styles.figure}>
-                <ArtboardPreview
-                  element={renderTemplate({ template, variant })}
-                  width={size.w}
-                  height={size.h}
-                  displayWidth={WIDTH}
-                />
+                {/* Two guards, because they catch different things. The
+                    try/catch in safeRender catches a template that throws while
+                    building its tree — which is most of them, and the only kind
+                    that can happen during the build's prerender, where React
+                    error boundaries do not run at all. The boundary catches one
+                    that throws later, while React is rendering the tree. */}
+                <CanvasErrorBoundary templateId={template.id}>
+                  <ArtboardPreview
+                    element={safeRender(template, variant)}
+                    width={size.w}
+                    height={size.h}
+                    displayWidth={WIDTH}
+                  />
+                </CanvasErrorBoundary>
                 <figcaption className="mono">DOM</figcaption>
               </figure>
               <figure className={styles.figure}>

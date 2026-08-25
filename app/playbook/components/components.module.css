@@ -210,3 +210,64 @@
   align-items: center;
   flex-wrap: wrap;
 }
+
+/* The tab bar is absolutely positioned — it belongs to a device screen. Given
+   no screen it escapes the card, so the catalogue supplies one. */
+.screen {
+  position: relative;
+  height: 300px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.screenBody {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeletonCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border-soft);
+  background: var(--bg-card);
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fieldInput {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--r-sm);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  color: var(--fg);
+  font-family: var(--font-ui);
+  font-size: 13px;
+}
+
+.fieldInputAlarm {
+  border-color: var(--alarm);
+}
+
+.noteStack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

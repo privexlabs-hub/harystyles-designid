@@ -1,0 +1,43 @@
+.wrap {
+  display: flex;
+  gap: var(--s-1);
+  flex-shrink: 0;
+}
+
+.button {
+  min-height: 34px;
+  padding: 0 var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--fg-muted);
+  font-size: var(--t-xs);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* The confirmation borrows the status tokens rather than inventing colours. */
+.button[data-state="saved"] {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+.button[data-state="failed"] {
+  border-color: var(--alarm);
+  color: var(--alarm);
+}
+
+/* Below the desktop breakpoint the toolbar is already carrying the sheet
+   triggers, so the secondary saves step aside and Save stays. */
+@media (max-width: 1080px) {
+  .button:not(:first-child) {
+    display: none;
+  }
+}

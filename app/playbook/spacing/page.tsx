@@ -9,8 +9,15 @@ export const metadata: Metadata = {
 };
 
 const SPACES: [string, number][] = [
-  ["--s-1", 4], ["--s-2", 8], ["--s-3", 12], ["--s-4", 16], ["--s-5", 24],
-  ["--s-6", 32], ["--s-7", 40], ["--s-8", 48], ["--s-9", 64], ["--s-10", 80], ["--s-11", 96],
+  ["--s-0", 0], ["--s-px", 1], ["--s-1", 4], ["--s-2", 8], ["--s-3", 12], ["--s-4", 16], ["--s-5", 24],
+  ["--s-6", 32], ["--s-7", 40], ["--s-8", 48], ["--s-9", 64], ["--s-10", 80], ["--s-11", 96], ["--s-12", 128],
+];
+
+const LAYERS: Array<[string, number, string]> = [
+  ["--z-nav", 10, "the top bar and the mobile tab bar — always there, never in front of anything you opened"],
+  ["--z-sticky", 20, "a heading or reading-progress rail that pins as you scroll past it"],
+  ["--z-modal", 40, "the scrim and everything on it: patronage prompt, sheet, menu"],
+  ["--z-toast", 60, "confirmations. The only thing allowed over a modal, because it reports on what the modal just did"],
 ];
 
 const RADII: [string, number][] = [
@@ -43,7 +50,7 @@ export default function SpacingPage() {
   return (
     <PlaybookPage
       href="/playbook/spacing"
-      eyebrow="04 · SPACING · RADII · SHADOWS · MOTION"
+      eyebrow="05 · SPACING · RADII · SHADOWS · MOTION"
       title={
         <>
           Quiet rules for{" "}
@@ -125,6 +132,21 @@ export default function SpacingPage() {
             ))}
           </ul>
         </Sample>
+      </Section>
+
+      <Section
+        title="LAYERING · FOUR LEVELS"
+        note="Gaps of twenty, so a one-off can sit between two levels without a renumbering. There are only four because a fifth would mean something in this product can obscure a toast, and nothing may — no banners, no interstitials, no floating promotion of anything."
+      >
+        <Grid min={240}>
+          {LAYERS.map(([t, z, what]) => (
+            <Sample key={t}>
+              <div className="mono" style={{ fontSize: 10 }}>{t}</div>
+              <div className="title-md" style={{ marginTop: 8, fontSize: 22 }}>{z}</div>
+              <div className="caption" style={{ marginTop: 4 }}>{what}</div>
+            </Sample>
+          ))}
+        </Grid>
       </Section>
 
       <Section title="READING MEASURE">

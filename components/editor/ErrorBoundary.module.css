@@ -1,0 +1,65 @@
+.wrap {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--s-5);
+  background: var(--ink-1000);
+}
+
+.card {
+  max-width: 46ch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  padding: var(--s-6);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--mood-burning);
+  border-radius: var(--r-lg);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  color: var(--fg);
+}
+
+.body {
+  margin: 0;
+}
+
+.detail {
+  margin: 0;
+  padding: var(--s-3);
+  background: var(--bg-elevated);
+  border-radius: var(--r-sm);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--fg-subtle);
+  /* A stack message can be long and must not widen the editor. */
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.actions {
+  display: flex;
+  gap: var(--s-2);
+}
+
+.retry {
+  padding: var(--s-2) var(--s-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-pill);
+  background: transparent;
+  color: var(--fg);
+  font-size: var(--t-sm);
+  cursor: pointer;
+}
+.retry:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

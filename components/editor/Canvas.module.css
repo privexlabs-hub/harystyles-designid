@@ -48,3 +48,12 @@
   border-radius: var(--r-pill);
   pointer-events: none;
 }
+
+/* Centred in the viewport, so the message sits where the artboard would. */
+.missing {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--s-5);
+}

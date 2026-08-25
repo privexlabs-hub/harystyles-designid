@@ -100,6 +100,17 @@
   --accent-fg:     var(--ink-950);
   --accent-hover:  var(--amber-400);
 
+  /* =============== STATUS ===============
+     Borrowed from the mood palette rather than invented. The brand already has
+     words for these states and a colour for each; a fresh green and red would
+     be two hues that belong to nothing else in the system.
+
+     Named the way the brand talks, not the way a component library does. */
+  --ok:      var(--mood-still);        /* kept, saved, done */
+  --caution: var(--mood-restless);     /* not yet, needs attention */
+  --alarm:   var(--mood-burning);      /* something is wrong */
+  --note:    var(--mood-melancholy);   /* for your information */
+
   --premium:       var(--wine-500);
   --premium-soft:  var(--wine-900);
 

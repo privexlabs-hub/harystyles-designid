@@ -505,3 +505,82 @@ export function BulletList({
     </Col>
   );
 }
+
+/**
+ * A photograph on an artboard.
+ *
+ * Width and height are always explicit, and the container always clips. Satori
+ * computes a `cover` box larger than its container and relies on the container
+ * to crop it, so without `overflow: hidden` the image bleeds over whatever comes
+ * next — and because Satori has no z-index, "whatever comes next" means the rest
+ * of the artboard.
+ *
+ * An empty `src` renders the placeholder rather than a broken image, so a
+ * template still reads before anyone has dropped a photograph into it.
+ */
+export function Image({
+  ctx,
+  src,
+  width,
+  height,
+  radius = 0,
+  fit = "cover",
+  label = "photograph",
+}: {
+  ctx: Ctx;
+  src: string;
+  width: number | string;
+  height: number | string;
+  radius?: number;
+  fit?: "cover" | "contain";
+  label?: string;
+}) {
+  const frame: CSSProperties = {
+    display: "flex",
+    width,
+    height,
+    borderRadius: radius,
+    overflow: "hidden",
+    flexShrink: 0,
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
+  if (!src) {
+    return (
+      <div
+        style={{
+          ...frame,
+          backgroundColor: ctx.p.bgElevated,
+          border: `${Math.max(1, ctx.u(1))}px dashed ${ctx.p.border}`,
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            fontFamily: FONT_STACK.mono,
+            fontSize: ctx.u(16),
+            letterSpacing: `${0.18 * ctx.u(16)}px`,
+            color: ctx.p.fgFaint,
+            textTransform: "uppercase",
+          }}
+        >
+          {label}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={frame}>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={src}
+        alt=""
+        width={typeof width === "number" ? width : undefined}
+        height={typeof height === "number" ? height : undefined}
+        style={{ width: "100%", height: "100%", objectFit: fit }}
+      />
+    </div>
+  );
+}

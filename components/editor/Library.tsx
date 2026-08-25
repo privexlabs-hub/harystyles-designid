@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { TEMPLATES, populatedCategories, templatesIn } from "@/lib/templates/registry";
 import { CATEGORY_META, type CategoryId } from "@/lib/templates/types";
-import { useEditor } from "@/lib/store/editor";
+import { selectPage, useEditor } from "@/lib/store/editor";
 import { Thumbnail } from "./Thumbnail";
 import styles from "./Library.module.css";
 
@@ -14,7 +14,7 @@ import styles from "./Library.module.css";
  * readily as they look for "vertical".
  */
 export function Library() {
-  const templateId = useEditor((s) => s.templateId);
+  const templateId = useEditor((s) => selectPage(s)?.templateId ?? "");
   const selectTemplate = useEditor((s) => s.selectTemplate);
 
   const [query, setQuery] = useState("");
